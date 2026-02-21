@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WizGrep (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WizGrep (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

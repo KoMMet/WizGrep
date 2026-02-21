@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="LeftPainHeader.Text" xml:space="preserve">
+    <value>マッチしたファイル</value>
+  </data>
+  <data name="LeftPainExport.Content" xml:space="preserve">
+    <value>出力</value>
+  </data>
+  <data name="MainTitle.Text" xml:space="preserve">
+    <value>WizGrep</value>
+  </data>
+  <data name="SearchResultsHeader.Text" xml:space="preserve">
+    <value>検索結果</value>
+  </data>
+  <data name="SearchResultsExport.Content" xml:space="preserve">
+    <value>出力</value>
+  </data>
+  <data name="ResultColumnFileName.Text" xml:space="preserve">
+    <value>ファイル名</value>
+  </data>
+  <data name="ResultColumnPosition.Text" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="ResultColumnContent.Text" xml:space="preserve">
+    <value>内容</value>
+  </data>
+  <data name="GrepSettingsButton.Content" xml:space="preserve">
+    <value>Grep設定</value>
+  </data>
+  <data name="WizGrepSettingsButton.Content" xml:space="preserve">
+    <value>WizGrep設定</value>
+  </data>
+  <data name="OnWizGrepSettingsClick.Content" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="IndexBasePathLabel.Text" xml:space="preserve">
+    <value>インデックスファイル保存先（ベースパス）</value>
+  </data>
+  <data name="IndexBasePathDescription.Text" xml:space="preserve">
+    <value>GrepIndexファイルやGrepタイムスタンプファイルを保存するフォルダを指定します。</value>
+  </data>
+  <data name="BrowseFolderButton.Content" xml:space="preserve">
+    <value>参照...</value>
+  </data>
+  <data name="RebuildIndexLabel.Text" xml:space="preserve">
+    <value>インデックス再構築</value>
+  </data>
+  <data name="RebuildIndexCheckBox.Content" xml:space="preserve">
+    <value>次回Grep時にインデックスを新規に作り直す</value>
+  </data>
+  <data name="RebuildIndexDescription.Text" xml:space="preserve">
+    <value>チェックすると、既存のインデックスファイルを削除して最初から作成し直します。</value>
+  </data>
+  <data name="IndexInfoBar.Title" xml:space="preserve">
+    <value>インデックスについて</value>
+  </data>
+  <data name="IndexInfoBar.Message" xml:space="preserve">
+    <value>インデックスファイルは検索速度を向上させるために使用されます。ファイルの更新日時が変わった場合は自動的に再作成されます。</value>
+  </data>
+  <data name="OssLibraryButton.Content" xml:space="preserve">
+    <value>OSS Library</value>
+  </data>
+  <data name="BackFromOssButton.Content" xml:space="preserve">
+    <value>← 戻る</value>
+  </data>
+  <data name="OssLibraryLabel.Text" xml:space="preserve">
+    <value>オープンソースライブラリ</value>
+  </data>
+  <data name="CancelButton.Content" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="GrepSettingsDialog.Title" xml:space="preserve">
+    <value>Grep設定</value>
+  </data>
+  <data name="PrimaryButtonText.PrimaryButtonText" xml:space="preserve">
+    <value>設定</value>
+  </data>
+  <data name="CloseButtonText" xml:space="preserve">
+    <value>キャンセル</value>
+  </data>
+  <data name="TargetFolderLabel.Text" xml:space="preserve">
+    <value>対象フォルダー</value>
+  </data>
+  <data name="KeywordLabel.Text" xml:space="preserve">
+    <value>キーワード</value>
+  </data>
+  <data name="Keyword0TextBox.PlaceholderText" xml:space="preserve">
+    <value>キーワード１</value>
+  </data>
+  <data name="Keyword1TextBox.PlaceholderText" xml:space="preserve">
+    <value>キーワード２</value>
+  </data>
+  <data name="Keyword2TextBox.PlaceholderText" xml:space="preserve">
+    <value>キーワード３</value>
+  </data>
+  <data name="Keyword3TextBox.PlaceholderText" xml:space="preserve">
+    <value>キーワード４</value>
+  </data>
+  <data name="Keyword4TextBox.PlaceholderText" xml:space="preserve">
+    <value>キーワード５</value>
+  </data>
+  <data name="SearchConditionLabel.Text" xml:space="preserve">
+    <value>検索条件</value>
+  </data>
+  <data name="AndSearchRadioButton.Content" xml:space="preserve">
+    <value>AND検索</value>
+  </data>
+  <data name="OrSearchRadioButton.Content" xml:space="preserve">
+    <value>OR検索</value>
+  </data>
+  <data name="TargetFilesLabel.Text" xml:space="preserve">
+    <value>対象ファイル</value>
+  </data>
+  <data name="UseCustomExtensionsCheckBox.Content" xml:space="preserve">
+    <value>カスタム拡張子を使用</value>
+  </data>
+  <data name="UseExcludeExtensionsCheckBox.Content" xml:space="preserve">
+    <value>対象外拡張子</value>
+  </data>
+  <data name="ExcludeExtensionsTextBox.PlaceholderText" xml:space="preserve">
+    <value>拡張子: .tmp, .bak, .log</value>
+  </data>
+  <data name="SearchOptionsLabel.Text" xml:space="preserve">
+    <value>検索オプション</value>
+  </data>
+  <data name="CaseSensitiveCheckBox.Content" xml:space="preserve">
+    <value>大文字と小文字を区別</value>
+  </data>
+  <data name="UseRegexCheckBox.Content" xml:space="preserve">
+    <value>正規表現を使用</value>
+  </data>
+  <data name="RealTimeDisplayCheckBox.Content" xml:space="preserve">
+    <value>リアルタイム表示</value>
+  </data>
+  <data name="RemoveExcelLineBreaksCheckBox.Content" xml:space="preserve">
+    <value>Excelの改行コードを削除</value>
+  </data>
+  <data name="ExcelSearchTargetLabel.Text" xml:space="preserve">
+    <value>Excelの検索対象</value>
+  </data>
+  <data name="ExcelDisplayValueRadioButton.Content" xml:space="preserve">
+    <value>表示値</value>
+  </data>
+  <data name="ExcelFormulaValueRadioButton.Content" xml:space="preserve">
+    <value>数式</value>
+  </data>
+  <data name="ExcludeFoldersLabel.Text" xml:space="preserve">
+    <value>対象外フォルダー</value>
+  </data>
+  <data name="ExcludeFoldersTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Temp; D:\Logs</value>
+  </data>
+  <data name="ObjectLabel" xml:space="preserve">
+    <value>オブジェクト</value>
+  </data>
+  <data name="RowLabel" xml:space="preserve">
+    <value>行</value>
+  </data>
+  <data name="ShapeLabel" xml:space="preserve">
+    <value>図形</value>
+  </data>
+  <data name="CommentLabel" xml:space="preserve">
+    <value>コメント</value>
+  </data>
+  <data name="PageLabel" xml:space="preserve">
+    <value>ページ</value>
+  </data>
+  <data name="SlideLavel" xml:space="preserve">
+    <value>スライド</value>
+  </data>
+  <data name="TableChartLabel" xml:space="preserve">
+    <value>表/グラフ</value>
+  </data>
+  <data name="NoteLabel" xml:space="preserve">
+    <value>ノート</value>
+  </data>
+  <data name="DocumentInfo" xml:space="preserve">
+    <value>文章情報</value>
+  </data>
+  <data name="HeaderLabel" xml:space="preserve">
+    <value>ヘッダー</value>
+  </data>
+  <data name="FooterLabel" xml:space="preserve">
+    <value>フッター</value>
+  </data>
+  <data name="TextFileLabel" xml:space="preserve">
+    <value>テキストファイル</value>
+  </data>
+  <data name="ErrorMessage_GrepSetting" xml:space="preserve">
+    <value>Grep設定中にエラーが発生しました。</value>
+  </data>
+  <data name="ErrorMessage_WizGrepSetting" xml:space="preserve">
+    <value>WizGrep設定中にエラーが発生しました。</value>
+  </data>
+  <data name="ErrorMessage_ExportFile" xml:space="preserve">
+    <value>ファイルのエクスポート中にエラーが発生しました。</value>
+  </data>
+  <data name="ErrorLabel" xml:space="preserve">
+    <value>エラー</value>
+  </data>
+  <data name="RegularExceptionMessage" xml:space="preserve">
+    <value>正規表現パターンが無効です</value>
+  </data>
+  <data name="EnumeratingFilesExceptionMessage" xml:space="preserve">
+    <value>ファイルの列挙中にエラーが発生しました</value>
+  </data>
+  <data name="PreparationCompleteLabel" xml:space="preserve">
+    <value>準備完了</value>
+  </data>
+  <data name="ProcessingLabel" xml:space="preserve">
+    <value>処理中</value>
+  </data>
+  <data name="SearchingLabel" xml:space="preserve">
+    <value>検索中</value>
+  </data>
+  <data name="SearchCompleteLabel" xml:space="preserve">
+    <value>検索完了</value>
+  </data>
+  <data name="FoundLabel" xml:space="preserve">
+    <value>件見つかりました。</value>
+  </data>
+  <data name="SearchCanceledLabel" xml:space="preserve">
+    <value>検索がキャンセルされました</value>
+  </data>
+  <data name="FilePathLabel" xml:space="preserve">
+    <value>ファイルパス</value>
+  </data>
+  <data name="FileNameLabel" xml:space="preserve">
+    <value>ファイル名</value>
+  </data>
+  <data name="LocationLabel" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="ContentLabel" xml:space="preserve">
+    <value>内容</value>
+  </data>
+</root>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ContentDialog
+    x:Class="WizGrep.Views.GrepSettingsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Uid="GrepSettingsDialog"
+    Title="Grep設定"
+    PrimaryButtonText="設定"
+    CloseButtonText="キャンセル"
+    DefaultButton="Primary"
+    IsPrimaryButtonEnabled="{x:Bind ViewModel.HasAnyTargetFileSelected, Mode=OneWay}"
+    PrimaryButtonClick="OnPrimaryButtonClick">
+    
+    <ScrollViewer VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="16" MinWidth="500">
+            <StackPanel Spacing="4">
+                <TextBlock x:Uid="TargetFolderLabel" FontWeight="SemiBold" />
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Column="0" Text="{x:Bind ViewModel.TargetFolderPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PlaceholderText="" />
+                    <Button x:Uid="BrowseFolderButton" Grid.Column="1" Margin="0,0,10,0" Command="{x:Bind ViewModel.BrowseFolderCommand}" />
+                </Grid>
+            </StackPanel>
+            <StackPanel Spacing="4">
+                <TextBlock x:Uid="KeywordLabel" FontWeight="SemiBold" />
+                <StackPanel Spacing="8">
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" IsChecked="{x:Bind ViewModel.KeywordEnabled0, Mode=TwoWay}" MinWidth="0" />
+                        <TextBox x:Uid="Keyword0TextBox" Grid.Column="1" Margin="0,0,10,0" Text="{x:Bind ViewModel.Keyword0, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" IsChecked="{x:Bind ViewModel.KeywordEnabled1, Mode=TwoWay}" MinWidth="0" />
+                        <TextBox x:Uid="Keyword1TextBox" Grid.Column="1" Margin="0,0,10,0" Text="{x:Bind ViewModel.Keyword1, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  />
+                    </Grid>
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" IsChecked="{x:Bind ViewModel.KeywordEnabled2, Mode=TwoWay}" MinWidth="0" />
+                        <TextBox x:Uid="Keyword2TextBox" Grid.Column="1" Margin="0,0,10,0" Text="{x:Bind ViewModel.Keyword2, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" IsChecked="{x:Bind ViewModel.KeywordEnabled3, Mode=TwoWay}" MinWidth="0" />
+                        <TextBox x:Uid="Keyword3TextBox" Grid.Column="1" Margin="0,0,10,0" Text="{x:Bind ViewModel.Keyword3, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                    <Grid ColumnSpacing="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <CheckBox Grid.Column="0" IsChecked="{x:Bind ViewModel.KeywordEnabled4, Mode=TwoWay}" MinWidth="0" />
+                        <TextBox x:Uid="Keyword4TextBox" Grid.Column="1" Margin="0,0,10,0" Text="{x:Bind ViewModel.Keyword4, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Spacing="4">
+                <TextBlock x:Uid="SearchConditionLabel" FontWeight="SemiBold" />
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <RadioButton x:Uid="AndSearchRadioButton" GroupName="SearchType" IsChecked="{x:Bind ViewModel.IsAndSearch, Mode=TwoWay}" />
+                    <RadioButton x:Uid="OrSearchRadioButton" GroupName="SearchType" IsChecked="{x:Bind ViewModel.IsOrSearch, Mode=TwoWay}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Spacing="4">
+                <TextBlock x:Uid="TargetFilesLabel" FontWeight="SemiBold" />
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <CheckBox Content="Excel" IsChecked="{x:Bind ViewModel.IncludeExcel, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsIndividualFileTypesEnabled, Mode=OneWay}" />
+                    <CheckBox Content="Word" IsChecked="{x:Bind ViewModel.IncludeWord, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsIndividualFileTypesEnabled, Mode=OneWay}" />
+                    <CheckBox Content="PowerPoint" IsChecked="{x:Bind ViewModel.IncludePowerPoint, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsIndividualFileTypesEnabled, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <CheckBox Content="PDF" IsChecked="{x:Bind ViewModel.IncludePdf, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsIndividualFileTypesEnabled, Mode=OneWay}" />
+                    <CheckBox Content="Text" IsChecked="{x:Bind ViewModel.IncludeText, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsIndividualFileTypesEnabled, Mode=OneWay}" />
+                    <CheckBox Content="ALL" IsChecked="{x:Bind ViewModel.IncludeAll, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+                    <CheckBox x:Uid="UseCustomExtensionsCheckBox" VerticalAlignment="Center" IsChecked="{x:Bind ViewModel.UseCustomExtensions, Mode=TwoWay}" IsEnabled="{x:Bind ViewModel.IsIndividualFileTypesEnabled, Mode=OneWay}" />
+                    <TextBox MinWidth="250" Text="{x:Bind ViewModel.CustomExtensions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{x:Bind ViewModel.IsCustomExtensionsTextEnabled, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                    <CheckBox x:Uid="UseExcludeExtensionsCheckBox" VerticalAlignment="Center" IsChecked="{x:Bind ViewModel.UseExcludeExtensions, Mode=TwoWay}" />
+                    <TextBox x:Uid="ExcludeExtensionsTextBox" MinWidth="250" Text="{x:Bind ViewModel.ExcludeExtensions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{x:Bind ViewModel.IsExcludeExtensionsTextEnabled, Mode=OneWay}" />
+                </StackPanel>
+                <StackPanel Spacing="4" Margin="0,4,0,0">
+                    <TextBlock x:Uid="ExcludeFoldersLabel"/>
+                    <TextBox x:Uid="ExcludeFoldersTextBox" Text="{x:Bind ViewModel.ExcludeFolders, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Spacing="4">
+                <TextBlock x:Uid="SearchOptionsLabel" FontWeight="SemiBold" />
+                <CheckBox x:Uid="CaseSensitiveCheckBox" IsChecked="{x:Bind ViewModel.CaseSensitive, Mode=TwoWay}" />
+                <CheckBox x:Uid="UseRegexCheckBox" IsChecked="{x:Bind ViewModel.UseRegex, Mode=TwoWay}" />
+                <CheckBox x:Uid="RealTimeDisplayCheckBox" IsChecked="{x:Bind ViewModel.RealTimeDisplay, Mode=TwoWay}" />
+                <CheckBox x:Uid="RemoveExcelLineBreaksCheckBox" IsChecked="{x:Bind ViewModel.RemoveExcelLineBreaks, Mode=TwoWay}" />
+            </StackPanel>
+            <StackPanel Spacing="4">
+                <TextBlock x:Uid="ExcelSearchTargetLabel" FontWeight="SemiBold" />
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <RadioButton x:Uid="ExcelDisplayValueRadioButton" GroupName="ExcelSearchType" IsChecked="{x:Bind ViewModel.IsExcelDisplayValue, Mode=TwoWay}" />
+                    <RadioButton x:Uid="ExcelFormulaValueRadioButton" GroupName="ExcelSearchType" IsChecked="{x:Bind ViewModel.IsExcelFormulaValue, Mode=TwoWay}" />
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</ContentDialog>

@@ -1,0 +1,354 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="LeftPainHeader.Text" xml:space="preserve">
+    <value>MatchFiles</value>
+  </data>
+  <data name="LeftPainExport.Content" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="MainTitle.Text" xml:space="preserve">
+    <value>WizGrep</value>
+  </data>
+  <data name="SearchResultsHeader.Text" xml:space="preserve">
+    <value>SearchResult</value>
+  </data>
+  <data name="SearchResultsExport.Content" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="ResultColumnFileName.Text" xml:space="preserve">
+    <value>FileName</value>
+  </data>
+  <data name="ResultColumnPosition.Text" xml:space="preserve">
+    <value>Position</value>
+  </data>
+  <data name="ResultColumnContent.Text" xml:space="preserve">
+    <value>Contents</value>
+  </data>
+  <data name="GrepSettingsButton.Content" xml:space="preserve">
+    <value>GrepSetting</value>
+  </data>
+  <data name="WizGrepSettingsButton.Content" xml:space="preserve">
+    <value>WizGrepSetting</value>
+  </data>
+  <data name="OnWizGrepSettingsClick.Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="IndexBasePathLabel.Text" xml:space="preserve">
+    <value>Index File Storage Location (Base Path)</value>
+  </data>
+  <data name="IndexBasePathDescription.Text" xml:space="preserve">
+    <value>Specify the folder where GrepIndex files and Grep timestamp files are saved.</value>
+  </data>
+  <data name="BrowseFolderButton.Content" xml:space="preserve">
+    <value>Browse</value>
+  </data>
+  <data name="RebuildIndexLabel.Text" xml:space="preserve">
+    <value>Index Rebuild</value>
+  </data>
+  <data name="RebuildIndexCheckBox.Content" xml:space="preserve">
+    <value>Recreate the index during the next Grep operation</value>
+  </data>
+  <data name="RebuildIndexDescription.Text" xml:space="preserve">
+    <value>If checked, existing index files will be deleted and rebuilt from scratch.</value>
+  </data>
+  <data name="IndexInfoBar.Title" xml:space="preserve">
+    <value>About the Index</value>
+  </data>
+  <data name="IndexInfoBar.Message" xml:space="preserve">
+    <value>Index files are used to improve search speed. They are automatically recreated when the file's modification date changes.</value>
+  </data>
+  <data name="OssLibraryButton.Content" xml:space="preserve">
+    <value>OSS Library</value>
+  </data>
+  <data name="BackFromOssButton.Content" xml:space="preserve">
+    <value>←Back</value>
+  </data>
+  <data name="OssLibraryLabel.Text" xml:space="preserve">
+    <value>Open-source library</value>
+  </data>
+  <data name="CancelButton.Content" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="GrepSettingsDialog.Title" xml:space="preserve">
+    <value>GrepSetting</value>
+  </data>
+  <data name="PrimaryButtonText.PrimaryButtonText" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="TargetFolderLabel.Text" xml:space="preserve">
+    <value>TargetFolders</value>
+  </data>
+  <data name="KeywordLabel.Text" xml:space="preserve">
+    <value>Keyword</value>
+  </data>
+  <data name="Keyword0TextBox.PlaceholderText" xml:space="preserve">
+    <value>Keyword1</value>
+  </data>
+  <data name="Keyword1TextBox.PlaceholderText" xml:space="preserve">
+    <value>Keyword2</value>
+  </data>
+  <data name="Keyword2TextBox.PlaceholderText" xml:space="preserve">
+    <value>Keyword3</value>
+  </data>
+  <data name="Keyword3TextBox.PlaceholderText" xml:space="preserve">
+    <value>Keyword4</value>
+  </data>
+  <data name="Keyword4TextBox.PlaceholderText" xml:space="preserve">
+    <value>Keyword5</value>
+  </data>
+  <data name="SearchConditionLabel.Text" xml:space="preserve">
+    <value>SearchCondition</value>
+  </data>
+  <data name="AndSearchRadioButton.Content" xml:space="preserve">
+    <value>AND Search</value>
+  </data>
+  <data name="OrSearchRadioButton.Content" xml:space="preserve">
+    <value>OR Search</value>
+  </data>
+  <data name="TargetFilesLabel.Text" xml:space="preserve">
+    <value>TargetFiles</value>
+  </data>
+  <data name="UseCustomExtensionsCheckBox.Content" xml:space="preserve">
+    <value>UseCustomExtensions</value>
+  </data>
+  <data name="UseExcludeExtensionsCheckBox.Content" xml:space="preserve">
+    <value>UseExcludeExtentions</value>
+  </data>
+  <data name="ExcludeExtensionsTextBox.PlaceholderText" xml:space="preserve">
+    <value>Extension: .tmp, .bak, .log</value>
+  </data>
+  <data name="SearchOptionsLabel.Text" xml:space="preserve">
+    <value>SearchOption</value>
+  </data>
+  <data name="CaseSensitiveCheckBox.Content" xml:space="preserve">
+    <value>Case sensitivity</value>
+  </data>
+  <data name="UseRegexCheckBox.Content" xml:space="preserve">
+    <value>UseRegex</value>
+  </data>
+  <data name="RealTimeDisplayCheckBox.Content" xml:space="preserve">
+    <value>RealTimeDisplay</value>
+  </data>
+  <data name="RemoveExcelLineBreaksCheckBox.Content" xml:space="preserve">
+    <value>RemoveExcelLineBreak</value>
+  </data>
+  <data name="ExcelSearchTargetLabel.Text" xml:space="preserve">
+    <value>SearchTarget</value>
+  </data>
+  <data name="ExcelDisplayValueRadioButton.Content" xml:space="preserve">
+    <value>DisplayValue</value>
+  </data>
+  <data name="ExcelFormulaValueRadioButton.Content" xml:space="preserve">
+    <value>FormulaValue</value>
+  </data>
+  <data name="ExcludeFoldersLabel.Text" xml:space="preserve">
+    <value>Exclude Folder</value>
+  </data>
+  <data name="ExcludeFoldersTextBox.PlaceholderText" xml:space="preserve">
+    <value>C:\Temp; D:\Logs</value>
+  </data>
+  <data name="ObjectLabel" xml:space="preserve">
+    <value>Object</value>
+  </data>
+  <data name="RowLabel" xml:space="preserve">
+    <value>Row</value>
+  </data>
+  <data name="ShapeLabel" xml:space="preserve">
+    <value>Shape</value>
+  </data>
+  <data name="CommentLabel" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="PageLabel" xml:space="preserve">
+    <value>Page</value>
+  </data>
+  <data name="SlideLavel" xml:space="preserve">
+    <value>Slide</value>
+  </data>
+  <data name="TableChartLabel" xml:space="preserve">
+    <value>Table/Chart</value>
+  </data>
+  <data name="NoteLabel" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="DocumentInfo" xml:space="preserve">
+    <value>DocumentInfo</value>
+  </data>
+  <data name="HeaderLabel" xml:space="preserve">
+    <value>Header</value>
+  </data>
+  <data name="FooterLabel" xml:space="preserve">
+    <value>Footer</value>
+  </data>
+  <data name="TextFileLabel" xml:space="preserve">
+    <value>TextFile</value>
+  </data>
+  <data name="ErrorMessage_GrepSetting" xml:space="preserve">
+    <value>An error occurred during grep setup.</value>
+  </data>
+  <data name="ErrorMessage_WizGrepSetting" xml:space="preserve">
+    <value>An error occurred during wizgrep setup.</value>
+  </data>
+  <data name="ErrorMessage_ExportFile" xml:space="preserve">
+    <value>An error occurred while exporting the file.</value>
+  </data>
+  <data name="ErrorLabel" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="RegularExceptionMessage" xml:space="preserve">
+    <value>The regular expression pattern is invalid.</value>
+  </data>
+  <data name="EnumeratingFilesExceptionMessage" xml:space="preserve">
+    <value>An error occurred while enumerating files.</value>
+  </data>
+  <data name="PreparationCompleteLabel" xml:space="preserve">
+    <value>Preparation complete.</value>
+  </data>
+  <data name="ProcessingLabel" xml:space="preserve">
+    <value>Processing</value>
+  </data>
+  <data name="SearchingLabel" xml:space="preserve">
+    <value>Searching</value>
+  </data>
+  <data name="SearchCompleteLabel" xml:space="preserve">
+    <value>Search complete</value>
+  </data>
+  <data name="FoundLabel" xml:space="preserve">
+    <value>founed.</value>
+  </data>
+  <data name="SearchCanceledLabel" xml:space="preserve">
+    <value>Search canceled</value>
+  </data>
+  <data name="FilePathLabel" xml:space="preserve">
+    <value>FilePath</value>
+  </data>
+  <data name="FileNameLabel" xml:space="preserve">
+    <value>Filename</value>
+  </data>
+  <data name="LocationLabel" xml:space="preserve">
+    <value>Locatiion</value>
+  </data>
+  <data name="ContentLabel" xml:space="preserve">
+    <value>Content</value>
+  </data>
+</root>
