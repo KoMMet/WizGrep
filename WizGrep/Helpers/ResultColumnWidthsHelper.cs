@@ -17,7 +17,7 @@ public partial class ResultColumnWidthsHelper : ObservableObject
 {
     /// <summary>Current width (in pixels) of the "File Name" column. Default is 200.</summary>
     [ObservableProperty]
-    private double _fileNameWidth = 200;y
+    private double _fileNameWidth = 200;
 
     /// <summary>Current width (in pixels) of the "Location" column. Default is 120.</summary>
     [ObservableProperty]
