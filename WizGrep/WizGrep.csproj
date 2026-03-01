@@ -52,7 +52,6 @@
     <PackageReference Include="OpenMcdf" Version="3.1.0" />
     <PackageReference Include="PdfPig" Version="0.1.13" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.3" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Views\WizGrepSettingsDialog.xaml">
