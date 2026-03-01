@@ -36,9 +36,9 @@ public class TextFileReader : IFileReader
                     Content = lines[i]
                 });
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Silently ignore file read errors (e.g., access denied, encoding issues)
+            LoggerHelper.Instance.LogError($"Error reading text file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
         }
 
         return results;

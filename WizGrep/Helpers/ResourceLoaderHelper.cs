@@ -9,9 +9,17 @@ namespace WizGrep.Helpers
     {
         private static readonly ResourceLoader Loader = new();
 
-        public static string GetString(string resourceKey)
+        public static string? GetString(string resourceKey)
         {
-            return Loader.GetString(resourceKey);
+            try
+            {
+                return Loader.GetString(resourceKey);
+            }
+            catch (Exception e)
+            {
+                LoggerHelper.Instance.LogError($"Error loading resource string for key '{resourceKey}': {e.Message}");
+            }
+            return null;
         }
     }
 }

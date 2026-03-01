@@ -46,9 +46,9 @@ public class PdfFileReader : IFileReader
                 }
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Silently ignore file read errors
+            LoggerHelper.Instance.LogError($"Error reading PDF file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
         }
 
         return results;

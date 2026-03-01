@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using OpenMcdf;
+using WizGrep.Helpers;
 using WizGrep.Models;
 
 namespace WizGrep.Services.FileReaders;
@@ -87,9 +88,9 @@ public class DocFileReader : IFileReader
                 lineNumber++;
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Silently ignore file read errors
+            LoggerHelper.Instance.LogError($"Error reading .doc file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
         }
 
         return results;

@@ -28,14 +28,14 @@ public class EncodingDetectorHelper
     /// invalid byte sequences. Created in <see cref="DetectEncodingFromBytes"/> to validate
     /// whether the data is valid UTF-8.
     /// </summary>
-    private static UTF8Encoding StrictUtf8;
+    private static UTF8Encoding? StrictUtf8;
 
     /// <summary>
     /// Strict Shift_JIS encoding instance that throws <see cref="DecoderFallbackException"/> on
     /// invalid byte sequences. Created in <see cref="DetectEncodingFromBytes"/> to validate
     /// whether the data is valid Shift_JIS.
     /// </summary>
-    private static Encoding StrictShiftJis;
+    private static Encoding? StrictShiftJis;
 
     /// <summary>
     /// Maximum byte length of a single multi-byte character (4 for UTF-8).
@@ -209,8 +209,9 @@ public class EncodingDetectorHelper
             encoding.GetString(data);
             return true;
         }
-        catch (DecoderFallbackException)
+        catch (DecoderFallbackException e)
         {
+            LoggerHelper.Instance.LogError($"Error decoding bytes with {encoding.WebName}: {e.Message}");
             return false;
         }
     }

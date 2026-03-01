@@ -76,6 +76,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
+            LoggerHelper.Instance.LogError($"Error showing Grep Settings dialog: {ex}");
             await ShowErrorDialogAsync($"{ResourceLoaderHelper.GetString("ErrorMessage_GrepSetting")}", ex.Message);
         }
     }
@@ -98,6 +99,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
+            LoggerHelper.Instance.LogError($"Error showing WizGrep Settings dialog: {ex}");
             await ShowErrorDialogAsync($"{ResourceLoaderHelper.GetString("ErrorMessage_WizGrepSetting")}", ex.Message);
         }
     }
@@ -124,6 +126,7 @@ public sealed partial class MainWindow : Window
         }
         catch (Exception ex)
         {
+            LoggerHelper.Instance.LogError($"Error exporting to file: {ex}");
             await ShowErrorDialogAsync($"{ResourceLoaderHelper.GetString("ErrorMessage_ExportFile")}", ex.Message);
         }
     }

@@ -1,5 +1,7 @@
+using System;
 using System.Text.Json;
 using Windows.Storage;
+using WizGrep.Helpers;
 using WizGrep.Models;
 
 namespace WizGrep.Services;
@@ -38,9 +40,9 @@ public class SettingsService
         {
             LocalSettings.Values[GrepSettingsKey] = JsonSerializer.Serialize(settings);
         }
-        catch
+        catch(Exception e)
         {
-            // Silently ignore save failures to prevent the application from crashing
+            LoggerHelper.Instance.LogError($"Error saving GrepSettings: {e.Message}");
         }
     }
 
@@ -58,9 +60,9 @@ public class SettingsService
                 return JsonSerializer.Deserialize<GrepSettings>(json) ?? new GrepSettings();
             }
         }
-        catch
+        catch(Exception e)
         {
-            // Return defaults on any load failure (corrupt data, schema mismatch, etc.)
+            LoggerHelper.Instance.LogError($"Error loading GrepSettings: {e.Message}");
         }
 
         return new GrepSettings();
@@ -77,9 +79,9 @@ public class SettingsService
         {
             LocalSettings.Values[WizGrepSettingsKey] = JsonSerializer.Serialize(settings);
         }
-        catch
+        catch( Exception e)
         {
-            // Silently ignore save failures to prevent the application from crashing
+            LoggerHelper.Instance.LogError($"Error saving WizGrepSettings: {e.Message}");
         }
     }
 
@@ -97,9 +99,9 @@ public class SettingsService
                 return JsonSerializer.Deserialize<WizGrepSettings>(json) ?? new WizGrepSettings();
             }
         }
-        catch
+        catch(Exception e)
         {
-            // Return defaults on any load failure (corrupt data, schema mismatch, etc.)
+            LoggerHelper.Instance.LogError($"Error loading WizGrepSettings: {e.Message}");
         }
 
         return new WizGrepSettings();

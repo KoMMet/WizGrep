@@ -62,6 +62,9 @@ public class ExcelFileReader : IFileReader
                         }
                     }
 
+                if(excelFormula)
+                    continue; // If we're only interested in formulas, skip shapes and comments
+                
                 // Extract text from drawing shapes (textboxes, callouts, etc.)
                 var drawingsPart = worksheetPart.DrawingsPart;
                 if (drawingsPart != null)
@@ -118,9 +121,9 @@ public class ExcelFileReader : IFileReader
                 }
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Silently ignore file read errors
+            LoggerHelper.Instance.LogError($"Error reading Excel file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
         }
 
         return results;
@@ -128,8 +131,12 @@ public class ExcelFileReader : IFileReader
 
     private static string GetCellValue(Cell cell, SharedStringTable? sharedStringTable, bool excelFormula)
     {
-        if(excelFormula && cell.CellFormula != null && !string.IsNullOrEmpty(cell.CellFormula.Text))
-            return "=" + cell.CellFormula.Text;
+        if (excelFormula)
+        {
+            if (excelFormula && cell.CellFormula != null && !string.IsNullOrEmpty(cell.CellFormula.Text))
+                return "=" + cell.CellFormula.Text;
+            return string.Empty;
+        }
 
         if (cell.DataType?.Value == CellValues.InlineString)
             return cell.InlineString?.InnerText ?? string.Empty;

@@ -92,9 +92,14 @@
                               SelectionMode="None" ShowsScrollingPlaceholders="True"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto"
                               ScrollViewer.HorizontalScrollMode="Auto">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind}" />
+                                <TextBlock Text="{x:Bind}" IsTextSelectionEnabled="True" TextWrapping="NoWrap"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
@@ -169,6 +174,11 @@
                                   SelectionMode="None"
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                   ScrollViewer.HorizontalScrollMode="Auto">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.ItemTemplate>
                                 <DataTemplate x:DataType="models:GrepResult">
                                     <Grid Padding="4,4">
@@ -179,14 +189,14 @@
                                             <ColumnDefinition Width="8" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{x:Bind FileName}"
+                                        <TextBlock Grid.Column="0" Text="{x:Bind FileName}" IsTextSelectionEnabled="True" TextWrapping="NoWrap"
                                                    Width="{Binding FileNameWidth, Source={StaticResource ResultColumnWidthsHelper}, Mode=OneWay}"
                                                    TextTrimming="CharacterEllipsis"
                                                    ToolTipService.ToolTip="{x:Bind FilePath}" />
-                                        <TextBlock Grid.Column="2" Text="{x:Bind Location}"
+                                        <TextBlock Grid.Column="2" Text="{x:Bind Location}" IsTextSelectionEnabled="True" TextWrapping="NoWrap"
                                                    Width="{Binding LocationWidth, Source={StaticResource ResultColumnWidthsHelper}, Mode=OneWay}"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
-                                        <TextBlock Grid.Column="4" Text="{x:Bind Content}"
+                                        <TextBlock Grid.Column="4" Text="{x:Bind Content}" IsTextSelectionEnabled="True" TextWrapping="NoWrap"
                                                    ToolTipService.ToolTip="{x:Bind Content}" />
                                     </Grid>
                                 </DataTemplate>

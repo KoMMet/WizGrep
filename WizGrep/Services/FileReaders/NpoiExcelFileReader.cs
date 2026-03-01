@@ -53,6 +53,9 @@ public class NpoiExcelFileReader : IFileReader
                             });
                         }
 
+                        if (excelFormula)
+                            continue; // Skip comments and shapes when only extracting formulas
+
                         // Extract the cell comment text, if present
                         var comment = cell.CellComment;
                         if (comment != null)
@@ -74,33 +77,46 @@ public class NpoiExcelFileReader : IFileReader
                     }
                 }
 
-                // Extract text from drawing shapes (recursively includes grouped shapes)
-                if (sheet.DrawingPatriarch is HSSFPatriarch patriarch)
+                // When not in formula-only mode, also extract text from drawing shapes
+                if (!excelFormula)
                 {
-                    var shapeIndex = 1;
-                    foreach (var shape in GetAllShapes(patriarch))
+                    // Extract text from drawing shapes (recursively includes grouped shapes)
+                    if (sheet.DrawingPatriarch is HSSFPatriarch patriarch)
                     {
-                        var text = GetShapeText(shape);
-                        if (!string.IsNullOrWhiteSpace(text))
+                        var shapeIndex = 1;
+                        foreach (var shape in GetAllShapes(patriarch))
                         {
-                            results.Add(new GrepResult
+                            var text = GetShapeText(shape);
+                            if (!string.IsNullOrWhiteSpace(text))
                             {
-                                FilePath = filePath,
-                                LineNumber = 0,
-                                SheetName = sheetName,
-                                ObjectName = $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
-                                Content = text
-                            });
-                        }
+                                // Split by line breaks to match xlsx behavior
+                                // (xlsx adds one GrepResult per Paragraph)
+                                var lines = text.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
+                                foreach (var line in lines)
+                                {
+                                    if (!string.IsNullOrWhiteSpace(line))
+                                    {
+                                        results.Add(new GrepResult
+                                        {
+                                            FilePath = filePath,
+                                            LineNumber = 0,
+                                            SheetName = sheetName,
+                                            ObjectName = $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
+                                            Content = line
+                                        });
+                                    }
+                                }
+                            }
 
-                        shapeIndex++;
+                            shapeIndex++;
+                        }
                     }
                 }
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Silently ignore file read errors
+            LoggerHelper.Instance.LogError($"Error reading file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
         }
 
         return results;
@@ -146,8 +162,12 @@ public class NpoiExcelFileReader : IFileReader
     {
         try
         {
-            if (excelFormula && cell.CellType == CellType.Formula)
-                return "=" + cell.CellFormula;
+            if (excelFormula)
+            {
+                if (excelFormula && cell.CellType == CellType.Formula)
+                    return "=" + cell.CellFormula;
+                return string.Empty;
+            }
 
             return cell.CellType switch
             {

@@ -4,6 +4,7 @@ using Windows.Storage.Pickers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinRT.Interop;
+using WizGrep.Helpers;
 using WizGrep.Models;
 using WizGrep.ViewModels;
 
@@ -69,8 +70,9 @@ public sealed partial class WizGrepSettingsDialog : ContentDialog
             var folder = await picker.PickSingleFolderAsync();
             return folder?.Path;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            LoggerHelper.Instance.LogError($"Error picking folder: {e.Message}");
             return null;
         }
     }

@@ -74,9 +74,9 @@ public class PptFileReader : IFileReader
             var slideCounter = 0;
             ExtractTextRecords(data, 0, data.Length, ref slideCounter, false, filePath, results);
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Silently ignore file read errors
+            LoggerHelper.Instance.LogError($"Error reading PowerPoint file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
         }
 
         return results;

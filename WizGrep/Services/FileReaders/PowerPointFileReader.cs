@@ -140,9 +140,9 @@ public class PowerPointFileReader : IFileReader
                 slideIndex++;
             }
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            // Silently ignore file read errors
+            LoggerHelper.Instance.LogError($"Error reading PowerPoint file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
         }
 
         return results;

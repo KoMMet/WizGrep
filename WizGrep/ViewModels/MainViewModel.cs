@@ -185,12 +185,14 @@ public partial class MainViewModel : ObservableObject
 
             StatusMessage = $"{ResourceLoaderHelper.GetString("SearchCompleteLabel")}: {GrepResults.Count}{ResourceLoaderHelper.GetString("FoundLabel")}";
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException e)
         {
+            LoggerHelper.Instance.LogInfo($"Search operation was canceled: {e.Message}");
             StatusMessage = $"{ResourceLoaderHelper.GetString("SearchCanceledLabel")}";
         }
         catch (Exception ex)
         {
+            LoggerHelper.Instance.LogError($"An error occurred during the search operation: {ex.Message}");
             StatusMessage = $"Error: {ex.Message} ";
         }
         finally
