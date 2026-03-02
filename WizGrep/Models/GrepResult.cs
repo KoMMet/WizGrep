@@ -64,7 +64,8 @@ public class GrepResult
                 return $"[{SheetName}] {ObjectName}";
             if (!string.IsNullOrEmpty(SheetName))
                 return $"[{SheetName}] {LineNumber} {ResourceLoaderHelper.GetString("RowLabel")}";
-            if (!string.IsNullOrEmpty(ObjectName)) return $"[{ResourceLoaderHelper.GetString("ObjectLabel")}] {ObjectName}";
+            if (!string.IsNullOrEmpty(ObjectName))
+                return $"[{ResourceLoaderHelper.GetString("ObjectLabel")}] {ObjectName}";
             return $"{LineNumber} {ResourceLoaderHelper.GetString("RowLabel")}";
         }
     }

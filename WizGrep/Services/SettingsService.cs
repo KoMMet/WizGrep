@@ -79,7 +79,7 @@ public class SettingsService
         {
             LocalSettings.Values[WizGrepSettingsKey] = JsonSerializer.Serialize(settings);
         }
-        catch( Exception e)
+        catch(Exception e)
         {
             LoggerHelper.Instance.LogError($"Error saving WizGrepSettings: {e.Message}");
         }
