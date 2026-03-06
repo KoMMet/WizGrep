@@ -17,7 +17,7 @@ namespace WizGrep.Helpers
             }
             catch (Exception e)
             {
-                LoggerHelper.Instance.LogError($"Error loading resource string for key '{resourceKey}': {e.Message}");
+                LoggerHelper.Instance.LogError($"Error loading resource string for key '{resourceKey}': {e.StackTrace}");
             }
             return null;
         }

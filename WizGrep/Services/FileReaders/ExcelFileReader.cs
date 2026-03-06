@@ -123,7 +123,7 @@ public class ExcelFileReader : IFileReader
         }
         catch (Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error reading Excel file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error reading Excel file '{filePath}' with excelFormula={excelFormula}: {e.StackTrace}");
         }
 
         return results;

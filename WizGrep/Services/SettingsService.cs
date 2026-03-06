@@ -42,7 +42,7 @@ public class SettingsService
         }
         catch(Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error saving GrepSettings: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error saving GrepSettings: {e.StackTrace}");
         }
     }
 
@@ -62,7 +62,7 @@ public class SettingsService
         }
         catch(Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error loading GrepSettings: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error loading GrepSettings: {e.StackTrace}");
         }
 
         return new GrepSettings();
@@ -81,7 +81,7 @@ public class SettingsService
         }
         catch(Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error saving WizGrepSettings: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error saving WizGrepSettings: {e.StackTrace}");
         }
     }
 
@@ -101,7 +101,7 @@ public class SettingsService
         }
         catch(Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error loading WizGrepSettings: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error loading WizGrepSettings: {e.StackTrace}");
         }
 
         return new WizGrepSettings();

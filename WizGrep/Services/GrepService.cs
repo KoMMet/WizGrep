@@ -95,7 +95,7 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
                 }
                 catch (ArgumentException ex)
                 {
-                    LoggerHelper.Instance.LogError($"Invalid regular expression pattern: \"{keyword}\" - {ex.Message}");
+                    LoggerHelper.Instance.LogError($"Invalid regular expression pattern: \"{keyword}\" - {ex.StackTrace}");
 
                     throw new InvalidOperationException(
                         $"{ResourceLoaderHelper.GetString("RegularExceptionMessage")}: \"{keyword}\" - {ex.Message}", ex);
@@ -270,7 +270,7 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
         }
         catch (Exception ex)
         {
-            LoggerHelper.Instance.LogError($"Error enumerating files in '{folderPath}': {ex.Message}");
+            LoggerHelper.Instance.LogError($"Error enumerating files in '{folderPath}': {ex.StackTrace}");
 
             throw new InvalidOperationException($"{ResourceLoaderHelper.GetString("EnumeratingFilesExceptionMessage")}: {ex.Message}", ex);
         }
@@ -367,7 +367,7 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
             }
             catch (RegexMatchTimeoutException e)
             {
-                LoggerHelper.Instance.LogError($"Regex match timeout for pattern: \"{keyword}\" - {e.Message}");
+                LoggerHelper.Instance.LogError($"Regex match timeout for pattern: \"{keyword}\" - {e.StackTrace}");
                 return false;
             }
         }

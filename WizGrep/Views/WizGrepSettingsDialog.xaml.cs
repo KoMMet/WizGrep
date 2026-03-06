@@ -72,7 +72,7 @@ public sealed partial class WizGrepSettingsDialog : ContentDialog
         }
         catch (Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error picking folder: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error picking folder: {e.StackTrace}");
             return null;
         }
     }

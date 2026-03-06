@@ -90,7 +90,7 @@ public class DocFileReader : IFileReader
         }
         catch (Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error reading .doc file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error reading .doc file '{filePath}' with excelFormula={excelFormula}: {e.StackTrace}");
         }
 
         return results;

@@ -115,7 +115,7 @@ public class WordFileReader : IFileReader
         }
         catch (Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error reading Word file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error reading Word file '{filePath}' with excelFormula={excelFormula}: {e.StackTrace}");
         }
 
         return results;

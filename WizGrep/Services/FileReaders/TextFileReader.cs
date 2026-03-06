@@ -38,7 +38,7 @@ public class TextFileReader : IFileReader
         }
         catch (Exception e)
         {
-            LoggerHelper.Instance.LogError($"Error reading text file '{filePath}' with excelFormula={excelFormula}: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error reading text file '{filePath}' with excelFormula={excelFormula}: {e.StackTrace}");
         }
 
         return results;

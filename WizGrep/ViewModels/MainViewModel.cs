@@ -192,7 +192,7 @@ public partial class MainViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            LoggerHelper.Instance.LogError($"An error occurred during the search operation: {ex.Message}");
+            LoggerHelper.Instance.LogError($"An error occurred during the search operation: {ex.StackTrace}");
             StatusMessage = $"Error: {ex.Message} ";
         }
         finally
