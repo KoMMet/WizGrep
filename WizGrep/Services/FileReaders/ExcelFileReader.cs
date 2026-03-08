@@ -133,7 +133,7 @@ public class ExcelFileReader : IFileReader
     {
         if (excelFormula)
         {
-            if (excelFormula && cell.CellFormula != null && !string.IsNullOrEmpty(cell.CellFormula.Text))
+            if (cell.CellFormula != null && !string.IsNullOrEmpty(cell.CellFormula.Text))
                 return "=" + cell.CellFormula.Text;
             return string.Empty;
         }

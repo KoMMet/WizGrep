@@ -179,6 +179,14 @@ public partial class MainViewModel : ObservableObject
                 progress,
                 token));
 
+            // Auto-reset RebuildIndex after successful rebuild so the index
+            // is not deleted on every subsequent search.
+            if (wizGrepSettings.RebuildIndex)
+            {
+                wizGrepSettings.RebuildIndex = false;
+                SaveWizGrepSettings(wizGrepSettings);
+            }
+
             if (!realTimeDisplay)
                 foreach (var result in results)
                     AddResult(result);
