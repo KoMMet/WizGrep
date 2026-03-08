@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -125,22 +124,9 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
         // Reflect the setting for whether to search formulas in Excel files
         var excelFormula = grepSettings.IsExcelFormulaValue;
 
-        // Check for the existence of the index and verify the last modified timestamps
-        var useIndex = !string.IsNullOrEmpty(wizGrepSettings.IndexBasePath) &&
-                       indexService.IndexExists(wizGrepSettings.IndexBasePath, targetFolderPath);
+        // Check whether per-file indexing is available
+        var useIndex = !string.IsNullOrEmpty(wizGrepSettings.IndexBasePath);
 
-        Dictionary<string, DateTime> storedTimestamps = new();
-        List<GrepResult> indexedResults = new();
-
-        if (useIndex)
-        {
-            storedTimestamps =
-                indexService.LoadTimestamps(wizGrepSettings.IndexBasePath, targetFolderPath);
-            indexedResults = indexService.LoadIndex(wizGrepSettings.IndexBasePath, targetFolderPath);
-        }
-
-        var newTimestamps = new Dictionary<string, DateTime>();
-        var allFileContents = new List<GrepResult>();
         var processedFiles = 0;
 
         foreach (var filePath in targetFiles)
@@ -156,21 +142,54 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
 
             var fileInfo = new FileInfo(filePath);
             var lastModified = fileInfo.LastWriteTime;
-            newTimestamps[filePath] = lastModified;
 
             List<GrepResult> fileContents;
+            var loadedFromIndex = false;
 
-            // Check if the index can be used
+            // Try to load from the per-file index when the timestamp and excelFormula flag match
             if (useIndex &&
-                storedTimestamps.TryGetValue(filePath, out var storedTime) &&
-                Math.Abs((storedTime - lastModified).TotalSeconds) < 1)
-                // Retrieve file contents from the index
-                fileContents = indexedResults.Where(r => r.FilePath == filePath).ToList();
-            else
-                // Read file contents
-                fileContents = fileReaderService.ReadFile(filePath, excelFormula).ToList();
+                indexService.FileIndexExists(wizGrepSettings.IndexBasePath, targetFolderPath, filePath))
+            {
+                var (storedTime, storedFormula) = indexService.LoadFileTimestamp(
+                    wizGrepSettings.IndexBasePath, targetFolderPath, filePath);
 
-            allFileContents.AddRange(fileContents);
+                if (storedTime.HasValue &&
+                    Math.Abs((storedTime.Value - lastModified).TotalSeconds) < 1 &&
+                    storedFormula == excelFormula)
+                {
+                    fileContents = indexService.LoadFileIndex(
+                        wizGrepSettings.IndexBasePath, targetFolderPath, filePath);
+                    loadedFromIndex = true;
+                }
+                else
+                {
+                    fileContents = fileReaderService.ReadFile(filePath, excelFormula).ToList();
+                }
+            }
+            else
+            {
+                fileContents = fileReaderService.ReadFile(filePath, excelFormula).ToList();
+            }
+
+            // Save the per-file index only when the file was actually read from disk
+            if (useIndex && !loadedFromIndex)
+            {
+                try
+                {
+                    await indexService.SaveFileIndexAsync(
+                        wizGrepSettings.IndexBasePath,
+                        targetFolderPath,
+                        filePath,
+                        fileContents,
+                        lastModified,
+                        excelFormula);
+                }
+                catch (Exception e)
+                {
+                    LoggerHelper.Instance.LogError(
+                        $"Error saving index for '{filePath}': {e.StackTrace}");
+                }
+            }
 
             // Execute search
             foreach (var content in fileContents)
@@ -204,14 +223,6 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
 
             processedFiles++;
         }
-
-        // Save the index
-        if (!string.IsNullOrEmpty(wizGrepSettings.IndexBasePath))
-            await indexService.SaveIndexAsync(
-                wizGrepSettings.IndexBasePath,
-                targetFolderPath,
-                allFileContents,
-                newTimestamps);
 
         return results;
     }

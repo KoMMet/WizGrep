@@ -164,7 +164,7 @@ public class NpoiExcelFileReader : IFileReader
         {
             if (excelFormula)
             {
-                if (excelFormula && cell.CellType == CellType.Formula)
+                if (cell.CellType == CellType.Formula)
                     return "=" + cell.CellFormula;
                 return string.Empty;
             }
