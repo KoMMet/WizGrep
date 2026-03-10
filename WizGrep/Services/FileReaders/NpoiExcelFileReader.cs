@@ -24,7 +24,7 @@ public class NpoiExcelFileReader : IFileReader
 
         try
         {
-            using var stream = File.OpenRead(filePath);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             IWorkbook workbook = new HSSFWorkbook(stream);
 
             for (var i = 0; i < workbook.NumberOfSheets; i++)

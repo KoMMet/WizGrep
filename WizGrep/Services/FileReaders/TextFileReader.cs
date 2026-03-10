@@ -26,15 +26,20 @@ public class TextFileReader : IFileReader
         try
         {
             var encoding = EncodingDetectorHelper.DetectEncoding(filePath);
-            var lines = File.ReadAllLines(filePath, encoding);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var reader = new StreamReader(stream, encoding);
 
-            for (var i = 0; i < lines.Length; i++)
+            var lineNumber = 1;
+            while (reader.ReadLine() is { } line)
+            {
                 results.Add(new GrepResult
                 {
                     FilePath = filePath,
-                    LineNumber = i + 1,
-                    Content = lines[i]
+                    LineNumber = lineNumber,
+                    Content = line
                 });
+                lineNumber++;
+            }
         }
         catch (Exception e)
         {

@@ -67,7 +67,7 @@ public class EncodingDetectorHelper
         const int bufferSize = 4096;
         var buffer = new byte[bufferSize];
 
-        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
         var bytesRead = stream.Read(buffer, 0, buffer.Length);
 
         var isTruncated = bytesRead == bufferSize && stream.Position < stream.Length;

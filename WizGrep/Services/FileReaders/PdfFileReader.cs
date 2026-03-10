@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UglyToad.PdfPig;
 using WizGrep.Helpers;
 using WizGrep.Models;
@@ -20,7 +21,8 @@ public class PdfFileReader : IFileReader
 
         try
         {
-            using var document = PdfDocument.Open(filePath);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var document = PdfDocument.Open(stream);
 
             foreach (var page in document.GetPages())
             {

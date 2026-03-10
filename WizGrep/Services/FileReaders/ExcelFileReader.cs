@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
@@ -24,7 +25,8 @@ public class ExcelFileReader : IFileReader
 
         try
         {
-            using var document = SpreadsheetDocument.Open(filePath, false);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var document = SpreadsheetDocument.Open(stream, false);
             var workbookPart = document.WorkbookPart;
 
             if (workbookPart == null) return results;

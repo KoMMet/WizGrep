@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Presentation;
 using WizGrep.Helpers;
@@ -27,7 +28,8 @@ public class PowerPointFileReader : IFileReader
 
         try
         {
-            using var document = PresentationDocument.Open(filePath, false);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var document = PresentationDocument.Open(stream, false);
             var presentationPart = document.PresentationPart;
 
             if (presentationPart?.Presentation?.SlideIdList == null) return results;

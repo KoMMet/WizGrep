@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Vml;
@@ -29,7 +30,8 @@ public class WordFileReader : IFileReader
 
         try
         {
-            using var document = WordprocessingDocument.Open(filePath, false);
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var document = WordprocessingDocument.Open(stream, false);
             var body = document.MainDocumentPart?.Document?.Body;
 
             if (body != null)

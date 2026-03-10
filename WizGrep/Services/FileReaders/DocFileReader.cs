@@ -37,7 +37,11 @@ public class DocFileReader : IFileReader
 
         try
         {
-            using var root = RootStorage.OpenRead(filePath);
+            using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            using var memStream = new MemoryStream();
+            fs.CopyTo(memStream);
+            memStream.Position = 0;
+            using var root = RootStorage.Open(memStream);
 
             using var wordDocStream = root.OpenStream("WordDocument");
             var wordDocBytes = ReadAllBytes(wordDocStream);
