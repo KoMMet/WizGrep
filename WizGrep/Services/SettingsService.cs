@@ -1,6 +1,6 @@
 using System;
-using System.IO;
 using System.Text.Json;
+using Windows.Storage;
 using WizGrep.Helpers;
 using WizGrep.Models;
 
@@ -8,115 +8,102 @@ namespace WizGrep.Services;
 
 /// <summary>
 /// Persists and restores <see cref="GrepSettings"/> and <see cref="WizGrepSettings"/>
-/// to/from a JSON file (<c>wizgrepsetting_hozon.txt</c>) located next to the application executable.
+/// to/from the WinUI <see cref="ApplicationDataContainer"/> (local app data) as JSON.
 /// Silently returns default instances when loading fails.
 /// </summary>
 public class SettingsService
 {
-    /// <summary>Settings file name placed in the same directory as the EXE.</summary>
-    private const string SettingsFileName = "wizgrepsetting_hozon.txt";
+    /// <summary>Storage key for the serialized <see cref="GrepSettings"/>.</summary>
+    private const string GrepSettingsKey = "GrepSettings";
 
-    /// <summary>Absolute path to the settings file.</summary>
-    private static readonly string SettingsFilePath =
-        Path.Combine(AppContext.BaseDirectory, SettingsFileName);
+    /// <summary>Storage key for the serialized <see cref="WizGrepSettings"/>.</summary>
+    private const string WizGrepSettingsKey = "WizGrepSettings";
 
-    /// <summary>Serializer options shared across all read/write operations.</summary>
-    private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
-
-    /// <summary>In-memory cache so the file is read at most once per app session.</summary>
-    private SettingsData? _cache;
-
-    /// <summary>
-    /// Wrapper that holds both settings objects in a single JSON file.
-    /// </summary>
-    private sealed class SettingsData
+    /// <summary>Lazily-initialized handle to the local application data container.</summary>
+    private ApplicationDataContainer LocalSettings
     {
-        public GrepSettings? GrepSettings { get; set; }
-        public WizGrepSettings? WizGrepSettings { get; set; }
-    }
-
-    /// <summary>
-    /// Loads the combined settings from the file (or returns the cached copy).
-    /// </summary>
-    private SettingsData LoadAll()
-    {
-        if (_cache is not null) return _cache;
-
-        try
+        get
         {
-            if (File.Exists(SettingsFilePath))
-            {
-                var json = File.ReadAllText(SettingsFilePath);
-                _cache = JsonSerializer.Deserialize<SettingsData>(json);
-            }
-        }
-        catch (Exception e)
-        {
-            LoggerHelper.Instance.LogError($"Error loading settings file: {e.StackTrace}");
-        }
-
-        _cache ??= new SettingsData();
-        return _cache;
-    }
-
-    /// <summary>
-    /// Writes the combined settings to the file and updates the cache.
-    /// </summary>
-    private void SaveAll(SettingsData data)
-    {
-        try
-        {
-            _cache = data;
-            var json = JsonSerializer.Serialize(data, JsonOptions);
-            File.WriteAllText(SettingsFilePath, json);
-        }
-        catch (Exception e)
-        {
-            LoggerHelper.Instance.LogError($"Error saving settings file: {e.StackTrace}");
+            field ??= ApplicationData.Current.LocalSettings;
+            return field;
         }
     }
 
     /// <summary>
-    /// Serializes and saves the given <see cref="GrepSettings"/> to the settings file.
-    /// Any serialization or I/O errors are silently swallowed to keep the application running.
+    /// Serializes and saves the given <see cref="GrepSettings"/> to local app storage as JSON.
+    /// Any serialization or storage errors are silently swallowed to keep the application running.
     /// </summary>
     /// <param name="settings">The grep configuration to persist.</param>
     public void SaveGrepSettings(GrepSettings settings)
     {
-        var data = LoadAll();
-        data.GrepSettings = settings;
-        SaveAll(data);
+        try
+        {
+            LocalSettings.Values[GrepSettingsKey] = JsonSerializer.Serialize(settings);
+        }
+        catch (Exception e)
+        {
+            LoggerHelper.Instance.LogError($"Error saving GrepSettings: {e.StackTrace}");
+        }
     }
 
     /// <summary>
-    /// Deserializes <see cref="GrepSettings"/> from the settings file.
-    /// Returns a default instance if the file is absent, the JSON is corrupt, or deserialization fails.
+    /// Deserializes <see cref="GrepSettings"/> from local app storage.
+    /// Returns a default instance if the key is absent, the JSON is corrupt, or deserialization fails.
     /// </summary>
     /// <returns>The persisted settings, or a default <see cref="GrepSettings"/> when loading fails.</returns>
     public GrepSettings LoadGrepSettings()
     {
-        return LoadAll().GrepSettings ?? new GrepSettings();
+        try
+        {
+            if (LocalSettings.Values.TryGetValue(GrepSettingsKey, out var value) && value is string json)
+            {
+                return JsonSerializer.Deserialize<GrepSettings>(json) ?? new GrepSettings();
+            }
+        }
+        catch (Exception e)
+        {
+            LoggerHelper.Instance.LogError($"Error loading GrepSettings: {e.StackTrace}");
+        }
+
+        return new GrepSettings();
     }
 
     /// <summary>
-    /// Serializes and saves the given <see cref="WizGrepSettings"/> to the settings file.
-    /// Any serialization or I/O errors are silently swallowed to keep the application running.
+    /// Serializes and saves the given <see cref="WizGrepSettings"/> to local app storage as JSON.
+    /// Any serialization or storage errors are silently swallowed to keep the application running.
     /// </summary>
     /// <param name="settings">The WizGrep-specific configuration to persist.</param>
     public void SaveWizGrepSettings(WizGrepSettings settings)
     {
-        var data = LoadAll();
-        data.WizGrepSettings = settings;
-        SaveAll(data);
+        try
+        {
+            LocalSettings.Values[WizGrepSettingsKey] = JsonSerializer.Serialize(settings);
+        }
+        catch (Exception e)
+        {
+            LoggerHelper.Instance.LogError($"Error saving WizGrepSettings: {e.StackTrace}");
+        }
     }
 
     /// <summary>
-    /// Deserializes <see cref="WizGrepSettings"/> from the settings file.
-    /// Returns a default instance if the file is absent, the JSON is corrupt, or deserialization fails.
+    /// Deserializes <see cref="WizGrepSettings"/> from local app storage.
+    /// Returns a default instance if the key is absent, the JSON is corrupt, or deserialization fails.
     /// </summary>
     /// <returns>The persisted settings, or a default <see cref="WizGrepSettings"/> when loading fails.</returns>
     public WizGrepSettings LoadWizGrepSettings()
     {
-        return LoadAll().WizGrepSettings ?? new WizGrepSettings();
+        try
+        {
+            if (LocalSettings.Values.TryGetValue(WizGrepSettingsKey, out var value) && value is string json)
+            {
+                return JsonSerializer.Deserialize<WizGrepSettings>(json) ?? new WizGrepSettings();
+            }
+        }
+        catch (Exception e)
+        {
+            LoggerHelper.Instance.LogError($"Error loading WizGrepSettings: {e.StackTrace}");
+        }
+
+        return new WizGrepSettings();
     }
 }
