@@ -174,7 +174,7 @@ public partial class MainViewModel : ObservableObject
                 if (p.FoundResult != null && realTimeDisplay) AddResult(p.FoundResult);
             });
 
-            var results = await Task.Run(() => _grepService.ExecuteGrepAsync(
+            List<GrepResult> results = await Task.Run(() => _grepService.ExecuteGrepAsync(
                 grepSettings,
                 wizGrepSettings,
                 progress,
