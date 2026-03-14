@@ -22,6 +22,9 @@ public partial class WizGrepSettingsDialogViewModel : ObservableObject
     [ObservableProperty]
     private bool _rebuildIndex;
 
+    [ObservableProperty]
+    private bool _showSearchConditionsInExport;
+
     /// <summary>
     /// Gets or sets a function that asynchronously retrieves the path of a selected folder.
     /// </summary>
@@ -59,6 +62,7 @@ public partial class WizGrepSettingsDialogViewModel : ObservableObject
     {
         IndexBasePath = settings.IndexBasePath;
         RebuildIndex = settings.RebuildIndex;
+        ShowSearchConditionsInExport = settings.ShowSearchConditionsInExport;
     }
 
     /// <summary>
@@ -72,5 +76,6 @@ public partial class WizGrepSettingsDialogViewModel : ObservableObject
     {
         settings.IndexBasePath = IndexBasePath;
         settings.RebuildIndex = RebuildIndex;
+        settings.ShowSearchConditionsInExport = ShowSearchConditionsInExport;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -297,7 +298,13 @@ public partial class MainViewModel : ObservableObject
     /// <returns>A string containing the file paths of all matched files, separated by new lines.</returns>
     public string BuildFileListText()
     {
-        return string.Join(Environment.NewLine, MatchedFiles);
+        var sb = new StringBuilder();
+        if (WizGrepSettings.ShowSearchConditionsInExport)
+        {
+            sb.Append(BuildSearchConditionsHeader());
+        }
+        sb.Append(string.Join(Environment.NewLine, MatchedFiles));
+        return sb.ToString();
     }
 
     /// <summary>
@@ -312,6 +319,10 @@ public partial class MainViewModel : ObservableObject
     public string BuildResultsText()
     {
         var lines = new List<string>();
+        if (WizGrepSettings.ShowSearchConditionsInExport)
+        {
+            lines.Add(BuildSearchConditionsHeader().TrimEnd());
+        }
         // header line
         lines.Add($"{ResourceLoaderHelper.GetString("FilePathLabel")}\t{ResourceLoaderHelper.GetString("FileNameLabel")}\t{ResourceLoaderHelper.GetString("LocationLabel")}\t{ResourceLoaderHelper.GetString("ContentLabel")}");
         foreach (var result in GrepResults)
@@ -319,6 +330,89 @@ public partial class MainViewModel : ObservableObject
             lines.Add($"{result.FilePath}\t{result.FileName}\t{EscapeForTsv(result.Location)}\t{EscapeForTsv(result.Content)}");
         }
         return string.Join(Environment.NewLine, lines);
+    }
+
+    /// <summary>
+    /// Builds a search conditions header string based on the current <see cref="GrepSettings"/>.
+    /// Only active/selected settings are included in the output.
+    /// </summary>
+    private string BuildSearchConditionsHeader()
+    {
+        const string separator = "--------------";
+        var sb = new StringBuilder();
+        sb.AppendLine(separator);
+
+        var settings = GrepSettings;
+
+        // Target folder
+        if (!string.IsNullOrWhiteSpace(settings.TargetFolderPath))
+            sb.AppendLine($"{ResourceLoaderHelper.GetString("ExportHeader_TargetFolder")}:{settings.TargetFolderPath}");
+
+        // Keywords (only enabled and non-empty)
+        int keywordIndex = 0;
+        foreach (var kw in settings.Keywords)
+        {
+            keywordIndex++;
+            if (kw.IsEnabled && !string.IsNullOrWhiteSpace(kw.Keyword))
+                sb.AppendLine($"{ResourceLoaderHelper.GetString("ExportHeader_Keyword")}{keywordIndex}:{kw.Keyword}");
+        }
+
+        // Search condition (AND/OR)
+        sb.AppendLine($"{ResourceLoaderHelper.GetString("ExportHeader_SearchCondition")}:{(settings.IsAndSearch ? "AND" : "OR")}");
+
+        // Target files
+        var fileTypes = new List<string>();
+        if (settings.IncludeAll)
+        {
+            fileTypes.Add("ALL");
+        }
+        else
+        {
+            if (settings.IncludeExcel) fileTypes.Add("Excel");
+            if (settings.IncludeWord) fileTypes.Add("Word");
+            if (settings.IncludePowerPoint) fileTypes.Add("PowerPoint");
+            if (settings.IncludePdf) fileTypes.Add("PDF");
+            if (settings.IncludeText) fileTypes.Add("Text");
+        }
+        if (fileTypes.Count > 0)
+            sb.AppendLine($"{ResourceLoaderHelper.GetString("ExportHeader_TargetFiles")}: {string.Join(", ", fileTypes)}");
+
+        // Custom extensions
+        if (settings.UseCustomExtensions && !string.IsNullOrWhiteSpace(settings.CustomExtensions))
+            sb.AppendLine($"{ResourceLoaderHelper.GetString("ExportHeader_CustomExtensions")}: {settings.CustomExtensions}");
+
+        // Exclude extensions
+        if (settings.UseExcludeExtensions && !string.IsNullOrWhiteSpace(settings.ExcludeExtensions))
+            sb.AppendLine($"{ResourceLoaderHelper.GetString("ExportHeader_ExcludeExtensions")}: {settings.ExcludeExtensions}");
+
+        // Exclude folders
+        if (!string.IsNullOrWhiteSpace(settings.ExcludeFolders))
+            sb.AppendLine($"{ResourceLoaderHelper.GetString("ExportHeader_ExcludeFolders")}: {settings.ExcludeFolders}");
+
+        // Search options (only checked ones)
+        var options = new List<string>();
+        if (settings.CaseSensitive) options.Add(ResourceLoaderHelper.GetString("ExportHeader_CaseSensitive")!);
+        if (settings.UseRegex) options.Add(ResourceLoaderHelper.GetString("ExportHeader_UseRegex")!);
+        if (settings.RealTimeDisplay) options.Add(ResourceLoaderHelper.GetString("ExportHeader_RealTimeDisplay")!);
+        if (settings.RemoveExcelLineBreaks) options.Add(ResourceLoaderHelper.GetString("ExportHeader_RemoveExcelLineBreaks")!);
+        if (options.Count > 0)
+        {
+            sb.AppendLine(ResourceLoaderHelper.GetString("ExportHeader_SearchOptions"));
+            foreach (var option in options)
+                sb.AppendLine($"          {option}");
+        }
+
+        // Excel search target (only if Excel is included)
+        if (settings.IncludeExcel || settings.IncludeAll)
+        {
+            var excelTarget = settings.IsExcelDisplayValue
+                ? ResourceLoaderHelper.GetString("ExportHeader_DisplayValue")
+                : ResourceLoaderHelper.GetString("ExportHeader_FormulaValue");
+            sb.AppendLine($"{ResourceLoaderHelper.GetString("ExportHeader_ExcelSearchTarget")}:{excelTarget}");
+        }
+
+        sb.AppendLine(separator);
+        return sb.ToString();
     }
 
     /// <summary>
