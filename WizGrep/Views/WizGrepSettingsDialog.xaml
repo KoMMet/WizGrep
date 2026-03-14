@@ -29,6 +29,10 @@
                 <TextBlock x:Uid="RebuildIndexDescription" TextWrapping="Wrap" FontSize="12" Opacity="0.7" />
             </StackPanel>
             <InfoBar x:Uid="IndexInfoBar" IsOpen="True" IsClosable="False" Severity="Informational" />
+            <StackPanel Spacing="4">
+                <TextBlock x:Uid="ExportSettingsLabel" FontWeight="SemiBold" />
+                <CheckBox x:Uid="ShowSearchConditionsInExportCheckBox" IsChecked="{x:Bind ViewModel.ShowSearchConditionsInExport, Mode=TwoWay}" />
+            </StackPanel>
             <Button x:Uid="OssLibraryButton" Content="OSS Library" Click="OnOssLibClick" HorizontalAlignment="Left" />
         </StackPanel>
 

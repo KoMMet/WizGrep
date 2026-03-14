@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -33,6 +35,7 @@ public class ExcelFileReader : IFileReader
 
             var sheets = workbookPart.Workbook?.Descendants<Sheet>();
             var sharedStringTable = workbookPart.SharedStringTablePart?.SharedStringTable;
+            var stylesheet = workbookPart.WorkbookStylesPart?.Stylesheet;
 
             if(sheets == null) return results;
             
@@ -49,7 +52,7 @@ public class ExcelFileReader : IFileReader
                     foreach (var row in sheetData.Descendants<Row>())
                     foreach (var cell in row.Descendants<Cell>())
                     {
-                        var cellValue = GetCellValue(cell, sharedStringTable, excelFormula);
+                        var cellValue = GetCellValue(cell, sharedStringTable, stylesheet, excelFormula);
                         if (!string.IsNullOrWhiteSpace(cellValue))
                         {
                             var cellAddress = cell.CellReference?.Value ?? "";
@@ -131,7 +134,7 @@ public class ExcelFileReader : IFileReader
         return results;
     }
 
-    private static string GetCellValue(Cell cell, SharedStringTable? sharedStringTable, bool excelFormula)
+    private static string GetCellValue(Cell cell, SharedStringTable? sharedStringTable, Stylesheet? stylesheet, bool excelFormula)
     {
         if (excelFormula)
         {
@@ -159,6 +162,72 @@ public class ExcelFileReader : IFileReader
         if (cell.DataType?.Value == CellValues.Boolean)
             return value == "1" ? "TRUE" : "FALSE";
 
+        // Convert date-formatted numeric cells to DateTime strings (consistent with .xls behavior)
+        if (cell.DataType == null || cell.DataType.Value == CellValues.Number)
+        {
+            if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out var numericValue)
+                && IsDateCell(cell, stylesheet))
+            {
+                try
+                {
+                    return DateTime.FromOADate(numericValue).ToString();
+                }
+                catch
+                {
+                    // OADate conversion can fail for out-of-range values; fall through to raw value
+                }
+            }
+        }
+
         return value;
+    }
+
+    /// <summary>
+    /// Determines whether a cell is formatted as a date/time based on its style and number format.
+    /// </summary>
+    private static bool IsDateCell(Cell cell, Stylesheet? stylesheet)
+    {
+        if (stylesheet?.CellFormats == null || cell.StyleIndex == null)
+            return false;
+
+        var styleIndex = (int)cell.StyleIndex.Value;
+        var cellFormats = stylesheet.CellFormats.Elements<CellFormat>().ToList();
+        if (styleIndex < 0 || styleIndex >= cellFormats.Count)
+            return false;
+
+        var numberFormatId = cellFormats[styleIndex].NumberFormatId?.Value ?? 0;
+
+        // Built-in date/time format IDs
+        if (numberFormatId >= 14 && numberFormatId <= 22) return true;
+        if (numberFormatId >= 27 && numberFormatId <= 36) return true;
+        if (numberFormatId >= 45 && numberFormatId <= 47) return true;
+        if (numberFormatId >= 50 && numberFormatId <= 58) return true;
+
+        // Custom number formats (IDs >= 164): check format code for date/time characters
+        if (numberFormatId >= 164 && stylesheet.NumberingFormats != null)
+        {
+            var numFormat = stylesheet.NumberingFormats
+                .Elements<NumberingFormat>()
+                .FirstOrDefault(nf => nf.NumberFormatId?.Value == numberFormatId);
+
+            if (numFormat?.FormatCode?.Value != null)
+            {
+                // Strip quoted literals and escaped characters before checking
+                var code = Regex.Replace(numFormat.FormatCode.Value, "\"[^\"]*\"", "");
+                code = Regex.Replace(code, "\\\\.", "");
+                code = code.ToLowerInvariant();
+
+                if (code.Contains('y') || code.Contains('d') ||
+                    code.Contains('h') || code.Contains('s') ||
+                    code.Contains("am") || code.Contains("pm"))
+                    return true;
+
+                // 'm' alone also indicates month/minute in Excel format codes
+                if (code.Contains('m'))
+                    return true;
+            }
+        }
+
+        return false;
     }
 }

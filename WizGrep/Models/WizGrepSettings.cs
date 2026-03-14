@@ -18,4 +18,10 @@ public class WizGrepSettings
     /// from scratch at the start of the next grep operation.
     /// </summary>
     public bool RebuildIndex { get; set; } = false;
+
+    /// <summary>
+    /// When <c>true</c>, search conditions are prepended to the exported file
+    /// (both file list and grep results exports).
+    /// </summary>
+    public bool ShowSearchConditionsInExport { get; set; } = false;
 }

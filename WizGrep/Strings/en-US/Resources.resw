@@ -282,7 +282,7 @@
   <data name="PageLabel" xml:space="preserve">
     <value>Page</value>
   </data>
-  <data name="SlideLavel" xml:space="preserve">
+  <data name="SlideLabel" xml:space="preserve">
     <value>Slide</value>
   </data>
   <data name="TableChartLabel" xml:space="preserve">
@@ -291,7 +291,7 @@
   <data name="NoteLabel" xml:space="preserve">
     <value>Note</value>
   </data>
-  <data name="DocumentInfo" xml:space="preserve">
+  <data name="DocumentInfoLabel" xml:space="preserve">
     <value>DocumentInfo</value>
   </data>
   <data name="HeaderLabel" xml:space="preserve">
@@ -350,5 +350,56 @@
   </data>
   <data name="ContentLabel" xml:space="preserve">
     <value>Content</value>
+  </data>
+  <data name="ExportSettingsLabel.Text" xml:space="preserve">
+    <value>Export Settings</value>
+  </data>
+  <data name="ShowSearchConditionsInExportCheckBox.Content" xml:space="preserve">
+    <value>Show search conditions in export</value>
+  </data>
+  <data name="ExportHeader_TargetFolder" xml:space="preserve">
+    <value>Target Folder</value>
+  </data>
+  <data name="ExportHeader_Keyword" xml:space="preserve">
+    <value>Keyword</value>
+  </data>
+  <data name="ExportHeader_SearchCondition" xml:space="preserve">
+    <value>Search Condition</value>
+  </data>
+  <data name="ExportHeader_TargetFiles" xml:space="preserve">
+    <value>Target Files</value>
+  </data>
+  <data name="ExportHeader_CustomExtensions" xml:space="preserve">
+    <value>Custom Extensions</value>
+  </data>
+  <data name="ExportHeader_ExcludeExtensions" xml:space="preserve">
+    <value>Exclude Extensions</value>
+  </data>
+  <data name="ExportHeader_ExcludeFolders" xml:space="preserve">
+    <value>Exclude Folders</value>
+  </data>
+  <data name="ExportHeader_SearchOptions" xml:space="preserve">
+    <value>Search Options</value>
+  </data>
+  <data name="ExportHeader_CaseSensitive" xml:space="preserve">
+    <value>Case Sensitive</value>
+  </data>
+  <data name="ExportHeader_UseRegex" xml:space="preserve">
+    <value>Use Regex</value>
+  </data>
+  <data name="ExportHeader_RealTimeDisplay" xml:space="preserve">
+    <value>Real-Time Display</value>
+  </data>
+  <data name="ExportHeader_RemoveExcelLineBreaks" xml:space="preserve">
+    <value>Remove Excel Line Breaks</value>
+  </data>
+  <data name="ExportHeader_ExcelSearchTarget" xml:space="preserve">
+    <value>Excel Search Target</value>
+  </data>
+  <data name="ExportHeader_DisplayValue" xml:space="preserve">
+    <value>Display Value</value>
+  </data>
+  <data name="ExportHeader_FormulaValue" xml:space="preserve">
+    <value>Formula Value</value>
   </data>
 </root>

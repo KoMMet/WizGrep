@@ -282,7 +282,7 @@
   <data name="PageLabel" xml:space="preserve">
     <value>ページ</value>
   </data>
-  <data name="SlideLavel" xml:space="preserve">
+  <data name="SlideLabel" xml:space="preserve">
     <value>スライド</value>
   </data>
   <data name="TableChartLabel" xml:space="preserve">
@@ -291,7 +291,7 @@
   <data name="NoteLabel" xml:space="preserve">
     <value>ノート</value>
   </data>
-  <data name="DocumentInfo" xml:space="preserve">
+  <data name="DocumentInfoLabel" xml:space="preserve">
     <value>文章情報</value>
   </data>
   <data name="HeaderLabel" xml:space="preserve">
@@ -350,5 +350,56 @@
   </data>
   <data name="ContentLabel" xml:space="preserve">
     <value>内容</value>
+  </data>
+  <data name="ExportSettingsLabel.Text" xml:space="preserve">
+    <value>出力設定</value>
+  </data>
+  <data name="ShowSearchConditionsInExportCheckBox.Content" xml:space="preserve">
+    <value>出力ファイルに検索条件を表示</value>
+  </data>
+  <data name="ExportHeader_TargetFolder" xml:space="preserve">
+    <value>対象フォルダー</value>
+  </data>
+  <data name="ExportHeader_Keyword" xml:space="preserve">
+    <value>キーワード</value>
+  </data>
+  <data name="ExportHeader_SearchCondition" xml:space="preserve">
+    <value>検索条件</value>
+  </data>
+  <data name="ExportHeader_TargetFiles" xml:space="preserve">
+    <value>対象ファイル</value>
+  </data>
+  <data name="ExportHeader_CustomExtensions" xml:space="preserve">
+    <value>カスタム拡張子</value>
+  </data>
+  <data name="ExportHeader_ExcludeExtensions" xml:space="preserve">
+    <value>対象外拡張子</value>
+  </data>
+  <data name="ExportHeader_ExcludeFolders" xml:space="preserve">
+    <value>対象外フォルダー</value>
+  </data>
+  <data name="ExportHeader_SearchOptions" xml:space="preserve">
+    <value>検索オプション</value>
+  </data>
+  <data name="ExportHeader_CaseSensitive" xml:space="preserve">
+    <value>大文字と小文字を区別</value>
+  </data>
+  <data name="ExportHeader_UseRegex" xml:space="preserve">
+    <value>正規表現を使用</value>
+  </data>
+  <data name="ExportHeader_RealTimeDisplay" xml:space="preserve">
+    <value>リアルタイム表示</value>
+  </data>
+  <data name="ExportHeader_RemoveExcelLineBreaks" xml:space="preserve">
+    <value>Excelの改行コードを削除</value>
+  </data>
+  <data name="ExportHeader_ExcelSearchTarget" xml:space="preserve">
+    <value>Excelの検索対象</value>
+  </data>
+  <data name="ExportHeader_DisplayValue" xml:space="preserve">
+    <value>表示値</value>
+  </data>
+  <data name="ExportHeader_FormulaValue" xml:space="preserve">
+    <value>数式</value>
   </data>
 </root>
