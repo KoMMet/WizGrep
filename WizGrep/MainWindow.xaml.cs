@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.UI.Input;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using WinRT.Interop;
@@ -44,6 +45,9 @@ public sealed partial class MainWindow : Window
     private ColumnDefinition? _draggingColumn;
     private double _dragStartX;
     private double _dragStartWidth;
+    private bool _isPaneSplitterDragging;
+    private double _paneSplitterDragStartX;
+    private double _paneSplitterDragStartWidth;
 
     public MainViewModel ViewModel { get; }
 
@@ -194,6 +198,43 @@ public sealed partial class MainWindow : Window
 
         splitter.ReleasePointerCapture(e.Pointer);
         _draggingColumn = null;
+        e.Handled = true;
+    }
+
+    // --- Left/Right pane splitter ---
+
+    private void PaneSplitter_PointerPressed(object sender, PointerRoutedEventArgs e)
+    {
+        if (sender is not UIElement el)
+            return;
+
+        _isPaneSplitterDragging = true;
+        _paneSplitterDragStartX = e.GetCurrentPoint(RootGrid).Position.X;
+        _paneSplitterDragStartWidth = LeftPaneColumn.ActualWidth;
+        el.CapturePointer(e.Pointer);
+        e.Handled = true;
+    }
+
+    private void PaneSplitter_PointerMoved(object sender, PointerRoutedEventArgs e)
+    {
+        if (!_isPaneSplitterDragging)
+            return;
+
+        var currentX = e.GetCurrentPoint(RootGrid).Position.X;
+        var delta = currentX - _paneSplitterDragStartX;
+        var newWidth = Math.Max(LeftPaneColumn.MinWidth, _paneSplitterDragStartWidth + delta);
+        LeftPaneColumn.Width = new GridLength(newWidth);
+        e.Handled = true;
+    }
+
+    private void PaneSplitter_PointerReleased(object sender, PointerRoutedEventArgs e)
+    {
+        if (!_isPaneSplitterDragging)
+            return;
+
+        _isPaneSplitterDragging = false;
+        if (sender is UIElement el)
+            el.ReleasePointerCapture(e.Pointer);
         e.Handled = true;
     }
 }

@@ -65,8 +65,8 @@
         <!-- MainContent Left Right Pain -->
         <Grid Grid.Row="2" Padding="16">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="300" />
-                <ColumnDefinition Width="8" />
+                <ColumnDefinition x:Name="LeftPaneColumn" Width="300" MinWidth="150" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
@@ -107,7 +107,14 @@
             </Grid>
 
             <!-- Separator -->
-            <Border Grid.Column="1" Width="1" Background="{ThemeResource CardStrokeColorDefaultBrush}" />
+            <!-- Draggable Splitter -->
+            <helpers:ColumnSplitterHelper Grid.Column="1" Width="8"
+                  PointerPressed="PaneSplitter_PointerPressed"
+                  PointerMoved="PaneSplitter_PointerMoved"
+                  PointerReleased="PaneSplitter_PointerReleased">
+                <Border Width="1" Background="{ThemeResource CardStrokeColorDefaultBrush}"
+                        HorizontalAlignment="Center" />
+            </helpers:ColumnSplitterHelper>
 
             <!-- RightPane: Grep Result Details -->
             <Grid Grid.Column="2">
