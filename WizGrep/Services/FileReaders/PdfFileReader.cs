@@ -43,8 +43,8 @@ public class PdfFileReader : IFileReader
                             FilePath = filePath,
                             LineNumber = i + 1,
                             SheetName = $"{ResourceLoaderHelper.GetString("PageLabel")}{pageNumber}",
-                            Content = line.Trim()
-                        });
+                            Content = line
+                            });
                 }
             }
         }

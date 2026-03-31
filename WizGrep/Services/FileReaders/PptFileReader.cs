@@ -76,7 +76,8 @@ public class PptFileReader : IFileReader
             var data = ms.ToArray();
 
             var slideCounter = 0;
-            ExtractTextRecords(data, 0, data.Length, ref slideCounter, false, filePath, results);
+            var shapeCounter = 0;
+            ExtractTextRecords(data, 0, data.Length, ref slideCounter, ref shapeCounter, false, filePath, results);
         }
         catch (Exception e)
         {
@@ -94,12 +95,13 @@ public class PptFileReader : IFileReader
     /// <param name="offset">Start offset within <paramref name="data"/>.</param>
     /// <param name="endOffset">Exclusive end offset.</param>
     /// <param name="slideCounter">Running slide counter, incremented on each SlideContainer.</param>
+    /// <param name="shapeCounter">Running shape counter within the current slide, reset on each SlideContainer.</param>
     /// <param name="inNotes"><c>true</c> if currently inside a NotesContainer.</param>
     /// <param name="filePath">Source file path for populating results.</param>
     /// <param name="results">Accumulator list for extracted results.</param>
     private void ExtractTextRecords(
         byte[] data, int offset, int endOffset,
-        ref int slideCounter, bool inNotes,
+        ref int slideCounter, ref int shapeCounter, bool inNotes,
         string filePath, List<GrepResult> results)
     {
         while (offset + 8 <= endOffset)
@@ -128,24 +130,27 @@ public class PptFileReader : IFileReader
                 var childInNotes = inNotes;
 
                 if (recType == SlideContainerType)
+                {
                     slideCounter++;
+                    shapeCounter = 0;
+                }
                 else if (recType == NotesContainerType)
                     childInNotes = true;
 
                 ExtractTextRecords(data, dataStart, dataStart + (int)recLen,
-                    ref slideCounter, childInNotes, filePath, results);
+                    ref slideCounter, ref shapeCounter, childInNotes, filePath, results);
             }
             else // Atom record – extract text if it is a text atom type
             {
                 if (recType == TextCharsAtomType && recLen >= 2)
                 {
                     var text = Encoding.Unicode.GetString(data, dataStart, (int)recLen);
-                    AddTextResults(text, slideCounter, inNotes, filePath, results);
+                    AddTextResults(text, slideCounter, ref shapeCounter, inNotes, filePath, results);
                 }
                 else if (recType == TextBytesAtomType && recLen >= 1)
                 {
                     var text = Windows1252.GetString(data, dataStart, (int)recLen);
-                    AddTextResults(text, slideCounter, inNotes, filePath, results);
+                    AddTextResults(text, slideCounter, ref shapeCounter, inNotes, filePath, results);
                 }
             }
 
@@ -159,13 +164,22 @@ public class PptFileReader : IFileReader
     /// slide/note metadata.
     /// </summary>
     private static void AddTextResults(
-        string text, int slideCounter, bool inNotes,
+        string text, int slideCounter, ref int shapeCounter, bool inNotes,
         string filePath, List<GrepResult> results)
     {
         if (string.IsNullOrWhiteSpace(text)) return;
 
         var slideName = slideCounter > 0 ? $"{ResourceLoaderHelper.GetString("SlideLabel")}{slideCounter}" : $"{ResourceLoaderHelper.GetString("DocumentInfoLabel")}";
-        var objectName = inNotes ? $"{ResourceLoaderHelper.GetString("NoteLabel")}" : null;
+        string? objectName;
+        if (inNotes)
+        {
+            objectName = $"{ResourceLoaderHelper.GetString("NoteLabel")}";
+        }
+        else
+        {
+            shapeCounter++;
+            objectName = $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeCounter}";
+        }
 
         // PowerPoint binary format uses \r as the line break character
         var lines = text.Split('\r');

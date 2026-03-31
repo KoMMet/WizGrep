@@ -402,4 +402,10 @@
   <data name="ExportHeader_FormulaValue" xml:space="preserve">
     <value>数式</value>
   </data>
+  <data name="ResultCountSuffix" xml:space="preserve">
+    <value>件</value>
+  </data>
+  <data name="HeaderFooterLabel" xml:space="preserve">
+    <value>ヘッダー/フッター</value>
+  </data>
 </root>

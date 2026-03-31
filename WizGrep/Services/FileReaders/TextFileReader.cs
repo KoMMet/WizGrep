@@ -32,12 +32,15 @@ public class TextFileReader : IFileReader
             var lineNumber = 1;
             while (reader.ReadLine() is { } line)
             {
-                results.Add(new GrepResult
+                if (!string.IsNullOrWhiteSpace(line))
                 {
-                    FilePath = filePath,
-                    LineNumber = lineNumber,
-                    Content = line
-                });
+                    results.Add(new GrepResult
+                    {
+                        FilePath = filePath,
+                        LineNumber = lineNumber,
+                        Content = line
+                    });
+                }
                 lineNumber++;
             }
         }

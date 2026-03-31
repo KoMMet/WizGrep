@@ -114,6 +114,26 @@ public class WordFileReader : IFileReader
                     footerIndex++;
                 }
             }
+
+            // Extract text from comments
+            var commentsPart = document.MainDocumentPart?.WordprocessingCommentsPart;
+            if (commentsPart?.Comments != null)
+            {
+                var commentIndex = 1;
+                foreach (var comment in commentsPart.Comments.Descendants<Comment>())
+                {
+                    var commentText = comment.InnerText;
+                    if (!string.IsNullOrWhiteSpace(commentText))
+                        results.Add(new GrepResult
+                        {
+                            FilePath = filePath,
+                            LineNumber = 0,
+                            ObjectName = $"{ResourceLoaderHelper.GetString("CommentLabel")}{commentIndex}",
+                            Content = commentText
+                        });
+                    commentIndex++;
+                }
+            }
         }
         catch (Exception e)
         {

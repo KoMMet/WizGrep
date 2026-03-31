@@ -29,6 +29,7 @@ public partial class MainViewModel : ObservableObject
 {
     private readonly GrepService _grepService;
     private readonly SettingsService _settingsService;
+    private readonly HashSet<string> _matchedFilesSet = new(StringComparer.OrdinalIgnoreCase);
     private CancellationTokenSource? _cancellationTokenSource;
 
     [ObservableProperty]
@@ -86,7 +87,7 @@ public partial class MainViewModel : ObservableObject
     public Visibility ProgressVisibility => IsSearching ? Visibility.Visible : Visibility.Collapsed;
     public Visibility CancelVisibility => IsSearching ? Visibility.Visible : Visibility.Collapsed;
     public bool IsNotSearching => !IsSearching;
-    public string ResultCountText => $"{GrepResults.Count}Œ";
+    public string ResultCountText => $"{GrepResults.Count}{ResourceLoaderHelper.GetString("ResultCountSuffix")}";
     public string ProgressText => $"{ResourceLoaderHelper.GetString("ProcessingLabel")}: {CurrentProcessingFile} ({ProcessedFiles}/{TotalFiles})";
 
     partial void OnCurrentProcessingFileChanged(string value) => OnPropertyChanged(nameof(ProgressText));
@@ -154,6 +155,7 @@ public partial class MainViewModel : ObservableObject
         IsSearching = true;
         MatchedFiles.Clear();
         GrepResults.Clear();
+        _matchedFilesSet.Clear();
         StatusMessage = $"{ResourceLoaderHelper.GetString("SearchingLabel")}...";
 
         _cancellationTokenSource = new CancellationTokenSource();
@@ -238,7 +240,7 @@ public partial class MainViewModel : ObservableObject
     {
         GrepResults.Add(result);
 
-        if (!MatchedFiles.Contains(result.FilePath))
+        if (_matchedFilesSet.Add(result.FilePath))
         {
             MatchedFiles.Add(result.FilePath);
         }

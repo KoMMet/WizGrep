@@ -402,4 +402,10 @@
   <data name="ExportHeader_FormulaValue" xml:space="preserve">
     <value>Formula Value</value>
   </data>
+  <data name="ResultCountSuffix" xml:space="preserve">
+    <value> item(s)</value>
+  </data>
+  <data name="HeaderFooterLabel" xml:space="preserve">
+    <value>Header/Footer</value>
+  </data>
 </root>

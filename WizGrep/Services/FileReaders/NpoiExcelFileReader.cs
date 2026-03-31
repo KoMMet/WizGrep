@@ -53,9 +53,6 @@ public class NpoiExcelFileReader : IFileReader
                             });
                         }
 
-                        if (excelFormula)
-                            continue; // Skip comments and shapes when only extracting formulas
-
                         // Extract the cell comment text, if present
                         var comment = cell.CellComment;
                         if (comment != null)
@@ -77,39 +74,35 @@ public class NpoiExcelFileReader : IFileReader
                     }
                 }
 
-                // When not in formula-only mode, also extract text from drawing shapes
-                if (!excelFormula)
+                // Extract text from drawing shapes (recursively includes grouped shapes)
+                if (sheet.DrawingPatriarch is HSSFPatriarch patriarch)
                 {
-                    // Extract text from drawing shapes (recursively includes grouped shapes)
-                    if (sheet.DrawingPatriarch is HSSFPatriarch patriarch)
+                    var shapeIndex = 1;
+                    foreach (var shape in GetAllShapes(patriarch))
                     {
-                        var shapeIndex = 1;
-                        foreach (var shape in GetAllShapes(patriarch))
+                        var text = GetShapeText(shape);
+                        if (!string.IsNullOrWhiteSpace(text))
                         {
-                            var text = GetShapeText(shape);
-                            if (!string.IsNullOrWhiteSpace(text))
+                            // Split by line breaks to match xlsx behavior
+                            // (xlsx adds one GrepResult per Paragraph)
+                            var lines = text.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
+                            foreach (var line in lines)
                             {
-                                // Split by line breaks to match xlsx behavior
-                                // (xlsx adds one GrepResult per Paragraph)
-                                var lines = text.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
-                                foreach (var line in lines)
+                                if (!string.IsNullOrWhiteSpace(line))
                                 {
-                                    if (!string.IsNullOrWhiteSpace(line))
+                                    results.Add(new GrepResult
                                     {
-                                        results.Add(new GrepResult
-                                        {
-                                            FilePath = filePath,
-                                            LineNumber = 0,
-                                            SheetName = sheetName,
-                                            ObjectName = $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
-                                            Content = line
-                                        });
-                                    }
+                                        FilePath = filePath,
+                                        LineNumber = 0,
+                                        SheetName = sheetName,
+                                        ObjectName = $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
+                                        Content = line
+                                    });
                                 }
                             }
-
-                            shapeIndex++;
                         }
+
+                        shapeIndex++;
                     }
                 }
             }

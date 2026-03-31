@@ -58,11 +58,21 @@ public class DocFileReader : IFileReader
             var flags = BitConverter.ToUInt16(wordDocBytes, 0x000A);
             var fWhichTblStm = (flags & 0x0200) != 0;
             var ccpText = BitConverter.ToUInt32(wordDocBytes, 0x004C);
+            var ccpFtn = BitConverter.ToUInt32(wordDocBytes, 0x0050);
+            var ccpHdd = BitConverter.ToUInt32(wordDocBytes, 0x0054);
+            var ccpMcr = BitConverter.ToUInt32(wordDocBytes, 0x0058);
+            var ccpAtn = BitConverter.ToUInt32(wordDocBytes, 0x005C);
+            var ccpEdn = BitConverter.ToUInt32(wordDocBytes, 0x0060);
+            var ccpTxbx = BitConverter.ToUInt32(wordDocBytes, 0x0064);
+            var ccpHdrTxbx = BitConverter.ToUInt32(wordDocBytes, 0x0068);
             var fcClx = BitConverter.ToUInt32(wordDocBytes, 0x01A2);
             var lcbClx = BitConverter.ToUInt32(wordDocBytes, 0x01A6);
 
             if (lcbClx == 0 || ccpText == 0)
                 return results;
+
+            // Total character count covering all document regions
+            var totalCp = ccpText + ccpFtn + ccpHdd + ccpMcr + ccpAtn + ccpEdn + ccpTxbx + ccpHdrTxbx;
 
             // Open the correct table stream (0Table or 1Table) based on the FIB flag
             var tableName = fWhichTblStm ? "1Table" : "0Table";
@@ -70,26 +80,33 @@ public class DocFileReader : IFileReader
             var tableBytes = ReadAllBytes(tableStream);
 
             // Parse the CLX structure to extract the piece table and reconstruct the text
-            var text = ParseClx(wordDocBytes, tableBytes, fcClx, lcbClx, ccpText);
+            var text = ParseClx(wordDocBytes, tableBytes, fcClx, lcbClx, totalCp);
 
-            // Split text into lines and return as results
-            var lines = text.Split(['\r', '\n'], StringSplitOptions.None);
-            var lineNumber = 1;
-            foreach (var line in lines)
+            // Extract main document text
+            AddTextLines(SafeSubstring(text, 0, (int)ccpText), filePath, null, results);
+
+            // Extract headers/footers
+            if (ccpHdd > 0)
             {
-                // Remove field codes and control characters from each line
-                var cleaned = CleanText(line);
-                if (!string.IsNullOrWhiteSpace(cleaned))
-                {
-                    results.Add(new GrepResult
-                    {
-                        FilePath = filePath,
-                        LineNumber = lineNumber,
-                        Content = cleaned
-                    });
-                }
+                var hddStart = (int)(ccpText + ccpFtn);
+                AddTextLines(SafeSubstring(text, hddStart, (int)ccpHdd), filePath,
+                    ResourceLoaderHelper.GetString("HeaderFooterLabel"), results);
+            }
 
-                lineNumber++;
+            // Extract comments/annotations
+            if (ccpAtn > 0)
+            {
+                var atnStart = (int)(ccpText + ccpFtn + ccpHdd + ccpMcr);
+                AddTextLines(SafeSubstring(text, atnStart, (int)ccpAtn), filePath,
+                    ResourceLoaderHelper.GetString("CommentLabel"), results);
+            }
+
+            // Extract text boxes
+            if (ccpTxbx > 0)
+            {
+                var txbxStart = (int)(ccpText + ccpFtn + ccpHdd + ccpMcr + ccpAtn + ccpEdn);
+                AddTextLines(SafeSubstring(text, txbxStart, (int)ccpTxbx), filePath,
+                    ResourceLoaderHelper.GetString("ShapeLabel"), results);
             }
         }
         catch (Exception e)
@@ -235,5 +252,39 @@ public class DocFileReader : IFileReader
         using var ms = new MemoryStream();
         stream.CopyTo(ms);
         return ms.ToArray();
+    }
+
+    /// <summary>
+    /// Splits the text into lines, cleans each line, and adds non-empty lines to results.
+    /// </summary>
+    private static void AddTextLines(string text, string filePath, string? objectName, List<GrepResult> results)
+    {
+        var lines = text.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
+        var lineNumber = 1;
+        foreach (var line in lines)
+        {
+            var cleaned = CleanText(line);
+            if (!string.IsNullOrWhiteSpace(cleaned))
+            {
+                results.Add(new GrepResult
+                {
+                    FilePath = filePath,
+                    LineNumber = lineNumber,
+                    ObjectName = objectName,
+                    Content = cleaned
+                });
+            }
+
+            lineNumber++;
+        }
+    }
+
+    /// <summary>
+    /// Safely extracts a substring, returning empty if out of range.
+    /// </summary>
+    private static string SafeSubstring(string text, int start, int length)
+    {
+        if (start >= text.Length || length <= 0) return string.Empty;
+        return text.Substring(start, Math.Min(length, text.Length - start));
     }
 }

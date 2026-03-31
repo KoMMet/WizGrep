@@ -67,9 +67,6 @@ public class ExcelFileReader : IFileReader
                         }
                     }
 
-                if(excelFormula)
-                    continue; // If we're only interested in formulas, skip shapes and comments
-                
                 // Extract text from drawing shapes (textboxes, callouts, etc.)
                 var drawingsPart = worksheetPart.DrawingsPart;
                 if (drawingsPart != null)
@@ -215,6 +212,9 @@ public class ExcelFileReader : IFileReader
                 // Strip quoted literals and escaped characters before checking
                 var code = Regex.Replace(numFormat.FormatCode.Value, "\"[^\"]*\"", "");
                 code = Regex.Replace(code, "\\\\.", "");
+                // Strip underscore-skip-width patterns (e.g., _m, _)) and bracketed sections (e.g., [Red], [$-409])
+                code = Regex.Replace(code, "_.", "");
+                code = Regex.Replace(code, @"\[.*?\]", "");
                 code = code.ToLowerInvariant();
 
                 if (code.Contains('y') || code.Contains('d') ||

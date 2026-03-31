@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using DocumentFormat.OpenXml.Vml.Office;
+using System.Threading;
 
 namespace WizGrep.Helpers
 {
