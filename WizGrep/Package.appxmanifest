@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <Package
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
@@ -11,7 +11,7 @@
   <Identity
     Name="SmallStone.250099756DF21"
     Publisher="CN=B3FC4084-61BC-45E2-96C5-BCA9A9CED1D7"
-    Version="1.0.12.0" />
+    Version="1.0.18.0" />
 
   <mp:PhoneIdentity PhoneProductId="6c5201b5-a9b4-4d23-9395-df3e466c4cf1" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
