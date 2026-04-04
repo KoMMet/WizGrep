@@ -211,7 +211,7 @@ public class EncodingDetectorHelper
         }
         catch (DecoderFallbackException e)
         {
-            LoggerHelper.Instance.LogError($"Error decoding bytes with {encoding.WebName}: {e.Message}");
+            LoggerHelper.Instance.LogError($"Error decoding bytes with {encoding.WebName}: {e.StackTrace}");
             return false;
         }
     }
