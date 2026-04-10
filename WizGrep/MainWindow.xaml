@@ -99,7 +99,7 @@
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate x:DataType="x:String">
-                                <TextBlock Text="{x:Bind}" IsTextSelectionEnabled="True" TextWrapping="NoWrap"/>
+                                <TextBlock Text="{x:Bind}" DoubleTapped="UIElement_OnDoubleTapped_leftPainPath" IsTextSelectionEnabled="False" TextWrapping="NoWrap"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
@@ -196,10 +196,11 @@
                                             <ColumnDefinition Width="8" />
                                             <ColumnDefinition Width="*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{x:Bind FileName}" IsTextSelectionEnabled="True" TextWrapping="NoWrap"
+                                        <TextBlock Grid.Column="0" Text="{x:Bind FileName}" IsTextSelectionEnabled="False" TextWrapping="NoWrap"
                                                    Width="{Binding FileNameWidth, Source={StaticResource ResultColumnWidthsHelper}, Mode=OneWay}"
                                                    TextTrimming="CharacterEllipsis"
-                                                   ToolTipService.ToolTip="{x:Bind FilePath}" />
+                                                   ToolTipService.ToolTip="{x:Bind FilePath}" 
+                                                   DoubleTapped="UIElement_OnDoubleTapped_writePainPath"/>
                                         <TextBlock Grid.Column="2" Text="{x:Bind Location}" IsTextSelectionEnabled="True" TextWrapping="NoWrap"
                                                    Width="{Binding LocationWidth, Source={StaticResource ResultColumnWidthsHelper}, Mode=OneWay}"
                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}" />

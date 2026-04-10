@@ -3,10 +3,13 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.UI.Input;
 using Windows.Storage;
-using Windows.Storage.Pickers;
+using Microsoft.UI.Xaml.Automation;
+using Microsoft.Windows.Storage.Pickers;
+using NPOI.SS.Formula.Functions;
 using WinRT.Interop;
 using WizGrep.Helpers;
 using WizGrep.Services;
@@ -112,26 +115,23 @@ public sealed partial class MainWindow : Window
     {
         try
         {
-            var picker = new FileSavePicker
+            var picker = new FileSavePicker(AppWindow.Id)
             {
-                SuggestedStartLocation = PickerLocationId.DocumentsLibrary,
-                SuggestedFileName = suggestedFileName
+                SuggestedStartLocation = PickerLocationId.Desktop
             };
             picker.FileTypeChoices.Add($"{ResourceLoaderHelper.GetString("TextFileLabel")}", new List<string> { ".txt" });
-
-            var hwnd = WindowNative.GetWindowHandle(this);
-            InitializeWithWindow.Initialize(picker, hwnd);
-
-            var file = await picker.PickSaveFileAsync();
-            if (file != null)
-            {
-                await FileIO.WriteTextAsync(file, content);
-            }
+            
+            var pickResult = await picker.PickSaveFileAsync();
+                if (pickResult != null && !string.IsNullOrEmpty(pickResult.Path))
+                {
+                    var file = await StorageFile.GetFileFromPathAsync(pickResult.Path);
+                    await FileIO.WriteTextAsync(file, content);
+                }
         }
         catch (Exception ex)
         {
-            LoggerHelper.Instance.LogError($"Error exporting to file: {ex}");
-            await ShowErrorDialogAsync($"{ResourceLoaderHelper.GetString("ErrorMessage_ExportFile")}", ex.Message);
+            LoggerHelper.Instance.LogError($"Error exporting to file: {ex.StackTrace}");
+            await ShowErrorDialogAsync($"{ResourceLoaderHelper.GetString("ErrorMessage_ExportFile")}", ex.StackTrace);
         }
     }
 
@@ -236,5 +236,27 @@ public sealed partial class MainWindow : Window
         if (sender is UIElement el)
             el.ReleasePointerCapture(e.Pointer);
         e.Handled = true;
+    }
+
+    private void UIElement_OnDoubleTapped_leftPainPath(object sender, DoubleTappedRoutedEventArgs e)
+    {
+        if(sender is TextBlock { Text: { } path })
+        {
+            ViewModel.OpenFileCommand(path);
+        }
+    }
+
+    private void UIElement_OnDoubleTapped_writePainPath(object sender, DoubleTappedRoutedEventArgs e)
+    {
+        if (sender is TextBlock textBlock)
+        {
+            var toolTip = ToolTipService.GetToolTip(textBlock);
+            if (toolTip != null)
+            {
+                var path = toolTip.ToString();
+                ViewModel.OpenFileCommand(path);
+            }
+        }
+
     }
 }

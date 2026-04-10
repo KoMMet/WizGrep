@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.UI.Xaml;
@@ -55,7 +58,27 @@ public partial class MainViewModel : ObservableObject
 
     [ObservableProperty]
     private int _totalFiles;
-    
+
+    [RelayCommand]
+    public void OpenFileCommand(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+        {
+            _statusMessage = $"{ResourceLoaderHelper.GetString("InvalidFilePathMessage")}";
+            return;
+        }
+
+        try
+        {
+            Process.Start(new ProcessStartInfo { FileName = path, UseShellExecute = true });
+            _statusMessage = $"{ResourceLoaderHelper.GetString("FileOpenedMessage")}: {path}";
+        }
+        catch (Exception ex)
+        {
+            _statusMessage = $"{ResourceLoaderHelper.GetString("FileOpenErrorMessage")}: {ex.Message}";
+        }
+    }
+
     /// <summary>
     /// Initializes a new instance of the MainViewModel class, configuring search and settings services and loading
     /// initial application settings.
@@ -288,6 +311,7 @@ public partial class MainViewModel : ObservableObject
         if (ExportToFileAsync is { } export)
             await export(BuildResultsText(), "GrepResults.txt");
     }
+
 
     /// <summary>
     /// Builds a text representation of the matched files.

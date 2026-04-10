@@ -17,7 +17,7 @@ namespace WizGrep.ViewModels;
 public partial class WizGrepSettingsDialogViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string _indexBasePath = string.Empty;
+    private string _indexBasePath = String.Empty;
 
     [ObservableProperty]
     private bool _rebuildIndex;

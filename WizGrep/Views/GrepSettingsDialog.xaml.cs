@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using Windows.Storage.Pickers;
+using Microsoft.Windows.Storage.Pickers;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using WinRT.Interop;
@@ -64,13 +64,8 @@ public sealed partial class GrepSettingsDialog : ContentDialog
     {
         try
         {
-            var picker = new FolderPicker();
+            var picker = new FolderPicker(_parentWindow.AppWindow.Id);
             picker.SuggestedStartLocation = PickerLocationId.Desktop;
-            picker.FileTypeFilter.Add("*");
-
-            // Initialize the folder picker with the handle of the parent window to ensure it is displayed correctly.
-            var hwnd = WindowNative.GetWindowHandle(_parentWindow);
-            InitializeWithWindow.Initialize(picker, hwnd);
 
             var folder = await picker.PickSingleFolderAsync();
             return folder?.Path;
