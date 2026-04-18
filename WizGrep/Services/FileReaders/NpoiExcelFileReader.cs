@@ -80,29 +80,22 @@ public class NpoiExcelFileReader : IFileReader
                     var shapeIndex = 1;
                     foreach (var shape in GetAllShapes(patriarch))
                     {
-                        var text = GetShapeText(shape);
-                        if (!string.IsNullOrWhiteSpace(text))
+                        var hasParagraph = false;
+                        foreach (var paragraph in GetShapeParagraphs(shape))
                         {
-                            // Split by line breaks to match xlsx behavior
-                            // (xlsx adds one GrepResult per Paragraph)
-                            var lines = text.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
-                            foreach (var line in lines)
+                            results.Add(new GrepResult
                             {
-                                if (!string.IsNullOrWhiteSpace(line))
-                                {
-                                    results.Add(new GrepResult
-                                    {
-                                        FilePath = filePath,
-                                        LineNumber = 0,
-                                        SheetName = sheetName,
-                                        ObjectName = $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
-                                        Content = line
-                                    });
-                                }
-                            }
+                                FilePath = filePath,
+                                LineNumber = 0,
+                                SheetName = sheetName,
+                                ObjectName = $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
+                                Content = paragraph
+                            });
+                            hasParagraph = true;
                         }
 
-                        shapeIndex++;
+                        if (hasParagraph)
+                            shapeIndex++;
                     }
                 }
             }
@@ -136,13 +129,24 @@ public class NpoiExcelFileReader : IFileReader
     }
 
     /// <summary>
-    /// Returns the text content of a simple shape, or <c>null</c> for other shape types.
+    /// Returns one entry per paragraph for text-capable shapes.
+    /// Cell comments are excluded because they are extracted separately from cells.
     /// </summary>
-    private static string? GetShapeText(HSSFShape shape)
+    private static IEnumerable<string> GetShapeParagraphs(HSSFShape shape)
     {
-        if (shape is HSSFSimpleShape simpleShape)
-            return simpleShape.String?.String;
-        return null;
+        if (shape is not HSSFSimpleShape simpleShape || shape is HSSFComment)
+            yield break;
+
+        var text = simpleShape.String?.String;
+        if (string.IsNullOrWhiteSpace(text))
+            yield break;
+
+        var paragraphs = text.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
+        foreach (var paragraph in paragraphs)
+        {
+            if (!string.IsNullOrWhiteSpace(paragraph))
+                yield return paragraph;
+        }
     }
 
     /// <summary>

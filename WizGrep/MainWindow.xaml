@@ -91,7 +91,9 @@
                     <ListView ItemsSource="{x:Bind ViewModel.MatchedFiles, Mode=TwoWay}"
                               SelectionMode="None" ShowsScrollingPlaceholders="True"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                              ScrollViewer.HorizontalScrollMode="Auto">
+                              ScrollViewer.HorizontalScrollMode="Auto"
+                              CanDragItems="True"
+                              DragItemsStarting="MatchedFilesListView_DragItemsStarting">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
                                 <Setter Property="HorizontalContentAlignment" Value="Left" />

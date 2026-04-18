@@ -39,6 +39,12 @@ public class PptFileReader : IFileReader
     /// </summary>
     private const ushort SlideListWithTextContainerType = 0x0FF0;
 
+    /// <summary>Record type for Comment10Container (Comment2000) – wraps a single slide comment.</summary>
+    private const ushort Comment10ContainerType = 0x0FCC;
+
+    /// <summary>Record type for CString atom – contains UTF-16 LE encoded text, used in comment containers.</summary>
+    private const ushort CStringType = 0x0FBA;
+
     /// <summary>Windows-1252 encoding for single-byte text atoms.</summary>
     private static readonly Encoding Windows1252;
     
@@ -77,7 +83,8 @@ public class PptFileReader : IFileReader
 
             var slideCounter = 0;
             var shapeCounter = 0;
-            ExtractTextRecords(data, 0, data.Length, ref slideCounter, ref shapeCounter, false, filePath, results);
+            var commentCounter = 0;
+            ExtractTextRecords(data, 0, data.Length, ref slideCounter, ref shapeCounter, ref commentCounter, false, false, filePath, results);
         }
         catch (Exception e)
         {
@@ -96,12 +103,14 @@ public class PptFileReader : IFileReader
     /// <param name="endOffset">Exclusive end offset.</param>
     /// <param name="slideCounter">Running slide counter, incremented on each SlideContainer.</param>
     /// <param name="shapeCounter">Running shape counter within the current slide, reset on each SlideContainer.</param>
+    /// <param name="commentCounter">Running comment counter within the current slide, reset on each SlideContainer.</param>
     /// <param name="inNotes"><c>true</c> if currently inside a NotesContainer.</param>
+    /// <param name="inComment"><c>true</c> if currently inside a Comment10Container.</param>
     /// <param name="filePath">Source file path for populating results.</param>
     /// <param name="results">Accumulator list for extracted results.</param>
     private void ExtractTextRecords(
         byte[] data, int offset, int endOffset,
-        ref int slideCounter, ref int shapeCounter, bool inNotes,
+        ref int slideCounter, ref int shapeCounter, ref int commentCounter, bool inNotes, bool inComment,
         string filePath, List<GrepResult> results)
     {
         while (offset + 8 <= endOffset)
@@ -128,17 +137,21 @@ public class PptFileReader : IFileReader
                 }
 
                 var childInNotes = inNotes;
+                var childInComment = inComment;
 
                 if (recType == SlideContainerType)
                 {
                     slideCounter++;
                     shapeCounter = 0;
+                    commentCounter = 0;
                 }
                 else if (recType == NotesContainerType)
                     childInNotes = true;
+                else if (recType == Comment10ContainerType)
+                    childInComment = true;
 
                 ExtractTextRecords(data, dataStart, dataStart + (int)recLen,
-                    ref slideCounter, ref shapeCounter, childInNotes, filePath, results);
+                    ref slideCounter, ref shapeCounter, ref commentCounter, childInNotes, childInComment, filePath, results);
             }
             else // Atom record – extract text if it is a text atom type
             {
@@ -151,6 +164,28 @@ public class PptFileReader : IFileReader
                 {
                     var text = Windows1252.GetString(data, dataStart, (int)recLen);
                     AddTextResults(text, slideCounter, ref shapeCounter, inNotes, filePath, results);
+                }
+                else if (inComment && recType == CStringType && recLen >= 2)
+                {
+                    var instance = (recVerInstance >> 4) & 0x0FFF;
+                    if (instance == 1) // instance 1 = comment text
+                    {
+                        var text = Encoding.Unicode.GetString(data, dataStart, (int)recLen);
+                        if (!string.IsNullOrWhiteSpace(text))
+                        {
+                            var slideName = slideCounter > 0
+                                ? $"{ResourceLoaderHelper.GetString("SlideLabel")}{slideCounter}"
+                                : $"{ResourceLoaderHelper.GetString("DocumentInfoLabel")}";
+                            results.Add(new GrepResult
+                            {
+                                FilePath = filePath,
+                                LineNumber = 0,
+                                SheetName = slideName,
+                                ObjectName = $"{ResourceLoaderHelper.GetString("CommentLabel")}{++commentCounter}",
+                                Content = text
+                            });
+                        }
+                    }
                 }
             }
 

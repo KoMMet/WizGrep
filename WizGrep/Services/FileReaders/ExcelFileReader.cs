@@ -9,7 +9,6 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using WizGrep.Helpers;
 using WizGrep.Models;
-using Shape = DocumentFormat.OpenXml.Drawing.Spreadsheet.Shape;
 
 namespace WizGrep.Services.FileReaders;
 
@@ -71,19 +70,19 @@ public class ExcelFileReader : IFileReader
                 var drawingsPart = worksheetPart.DrawingsPart;
                 if (drawingsPart != null)
                 {
-                    var shapes = drawingsPart.WorksheetDrawing?
-                        .Descendants<Shape>();
+                    var textBodies = drawingsPart.WorksheetDrawing?.Descendants<TextBody>();
 
-                    if (shapes != null)
+                    if (textBodies != null)
                     {
                         var shapeIndex = 1;
-                        foreach (var shape in shapes)
+                        foreach (var textBody in textBodies)
                         {
-                            var textBody = shape.Descendants<Paragraph>();
-                            foreach (var para in textBody)
+                            var hasParagraph = false;
+                            foreach (var paragraph in textBody.Elements<Paragraph>())
                             {
-                                var text = para.InnerText;
+                                var text = paragraph.InnerText;
                                 if (!string.IsNullOrWhiteSpace(text))
+                                {
                                     results.Add(new GrepResult
                                     {
                                         FilePath = filePath,
@@ -92,9 +91,12 @@ public class ExcelFileReader : IFileReader
                                         ObjectName = $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
                                         Content = text
                                     });
+                                    hasParagraph = true;
+                                }
                             }
 
-                            shapeIndex++;
+                            if (hasParagraph)
+                                shapeIndex++;
                         }
                     }
                 }

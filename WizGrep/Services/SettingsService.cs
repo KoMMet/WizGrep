@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text.Json;
 using Windows.Storage;
 using WizGrep.Helpers;
@@ -53,19 +54,30 @@ public class SettingsService
     /// <returns>The persisted settings, or a default <see cref="GrepSettings"/> when loading fails.</returns>
     public GrepSettings LoadGrepSettings()
     {
+        GrepSettings settings;
         try
         {
             if (LocalSettings.Values.TryGetValue(GrepSettingsKey, out var value) && value is string json)
             {
-                return JsonSerializer.Deserialize<GrepSettings>(json) ?? new GrepSettings();
+                settings = JsonSerializer.Deserialize<GrepSettings>(json) ?? new GrepSettings();
+            }
+            else
+            {
+                settings = new GrepSettings();
             }
         }
         catch (Exception e)
         {
             LoggerHelper.Instance.LogError($"Error loading GrepSettings: {e.StackTrace}");
+            settings = new GrepSettings();
         }
 
-        return new GrepSettings();
+        if (string.IsNullOrEmpty(settings.TargetFolderPath))
+        {
+            settings.TargetFolderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        }
+
+        return settings;
     }
 
     /// <summary>
@@ -92,18 +104,31 @@ public class SettingsService
     /// <returns>The persisted settings, or a default <see cref="WizGrepSettings"/> when loading fails.</returns>
     public WizGrepSettings LoadWizGrepSettings()
     {
+        WizGrepSettings settings;
         try
         {
             if (LocalSettings.Values.TryGetValue(WizGrepSettingsKey, out var value) && value is string json)
             {
-                return JsonSerializer.Deserialize<WizGrepSettings>(json) ?? new WizGrepSettings();
+                settings = JsonSerializer.Deserialize<WizGrepSettings>(json) ?? new WizGrepSettings();
+            }
+            else
+            {
+                settings = new WizGrepSettings();
             }
         }
         catch (Exception e)
         {
             LoggerHelper.Instance.LogError($"Error loading WizGrepSettings: {e.StackTrace}");
+            settings = new WizGrepSettings();
         }
 
-        return new WizGrepSettings();
+        if (string.IsNullOrEmpty(settings.IndexBasePath))
+        {
+            settings.IndexBasePath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "WizGrep", "Index");
+        }
+
+        return settings;
     }
 }

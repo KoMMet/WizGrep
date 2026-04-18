@@ -3,14 +3,12 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.UI.Input;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
-using Microsoft.UI.Xaml.Automation;
 using Microsoft.Windows.Storage.Pickers;
-using NPOI.SS.Formula.Functions;
-using WinRT.Interop;
 using WizGrep.Helpers;
 using WizGrep.Services;
 using WizGrep.ViewModels;
@@ -244,6 +242,36 @@ public sealed partial class MainWindow : Window
         {
             ViewModel.OpenFileCommand(path);
         }
+    }
+
+    private async void MatchedFilesListView_DragItemsStarting(object sender, DragItemsStartingEventArgs e)
+    {
+        e.Data.RequestedOperation = DataPackageOperation.Copy;
+
+        var paths = e.Items.OfType<string>().ToList();
+
+        var storageItems = new List<IStorageItem>();
+        foreach (var path in paths)
+        {
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
+                continue;
+
+            try
+            {
+                var file = await StorageFile.GetFileFromPathAsync(path);
+                storageItems.Add(file);
+            }
+            catch (Exception ex)
+            {
+                LoggerHelper.Instance.LogError($"Error creating StorageFile for drag: {ex.Message}");
+            }
+        }
+
+        if (storageItems.Count > 0)
+            e.Data.SetStorageItems(storageItems);
+
+        if (paths.Count > 0)
+            e.Data.SetText(string.Join(Environment.NewLine, paths));
     }
 
     private void UIElement_OnDoubleTapped_writePainPath(object sender, DoubleTappedRoutedEventArgs e)

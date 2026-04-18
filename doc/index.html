@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WizGrep 説明と操作手順</title>
+  <style>
+    :root {
+      --bg: #f5f1e8;
+      --bg-accent: #efe6d3;
+      --paper: rgba(255, 252, 246, 0.92);
+      --ink: #2b2418;
+      --muted: #6a604f;
+      --line: rgba(72, 55, 24, 0.14);
+      --brand: #8c4f2a;
+      --brand-strong: #5e2f15;
+      --brand-soft: rgba(140, 79, 42, 0.12);
+      --shadow: 0 24px 80px rgba(61, 37, 18, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: "BIZ UDPGothic", "Yu Gothic UI", "Meiryo", sans-serif;
+      line-height: 1.7;
+      background:
+        radial-gradient(circle at top left, rgba(196, 146, 73, 0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(89, 129, 112, 0.16), transparent 24%),
+        linear-gradient(180deg, #f8f5ef 0%, var(--bg) 45%, #f2ebde 100%);
+    }
+
+    a {
+      color: var(--brand-strong);
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 32px auto 64px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, rgba(255, 250, 241, 0.96), rgba(244, 233, 208, 0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -60px -60px auto;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(140, 79, 42, 0.18), transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--brand);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 4vw, 3.8rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .lead {
+      max-width: 62rem;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .jump-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .jump-links a {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 16px;
+      border: 1px solid rgba(140, 79, 42, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    main {
+      display: grid;
+      gap: 28px;
+      margin-top: 28px;
+    }
+
+    section {
+      padding: 32px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    h2 {
+      margin: 0 0 18px;
+      font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+      line-height: 1.2;
+    }
+
+    h3 {
+      margin: 28px 0 10px;
+      font-size: 1.22rem;
+      line-height: 1.35;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    p + p,
+    p + ul,
+    p + ol,
+    ul + p,
+    ol + p,
+    .feature-grid + h3,
+    .info-grid + h3,
+    .step + .step,
+    figure + .step {
+      margin-top: 16px;
+    }
+
+    .feature-grid,
+    .info-grid,
+    .operation-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .feature-grid,
+    .info-grid {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .card,
+    .panel {
+      padding: 18px 20px;
+      border: 1px solid rgba(94, 47, 21, 0.12);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(247, 241, 228, 0.9));
+    }
+
+    .card h3,
+    .panel h3 {
+      margin: 0 0 8px;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    ul,
+    ol {
+      padding-left: 1.3rem;
+      margin: 0;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .step {
+      display: grid;
+      gap: 14px;
+      padding: 20px;
+      border: 1px solid rgba(94, 47, 21, 0.12);
+      border-radius: var(--radius-lg);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .step-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: baseline;
+    }
+
+    .step-label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 82px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand-strong);
+      font-weight: 700;
+      font-size: 0.92rem;
+    }
+
+    figure {
+      margin: 0;
+    }
+
+    .screenshot {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(72, 55, 24, 0.15);
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: 0 12px 30px rgba(54, 38, 18, 0.12);
+    }
+
+    .screenshot img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .marker {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--w);
+      height: var(--h);
+      border: 4px solid #c82418;
+      border-radius: 4px;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.6);
+      pointer-events: none;
+    }
+
+    figcaption {
+      padding: 12px 14px 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(245, 239, 227, 0.86));
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .summary-row {
+      display: grid;
+      grid-template-columns: minmax(120px, 180px) 1fr;
+      gap: 12px;
+      align-items: start;
+      padding: 12px 0;
+      border-bottom: 1px dashed rgba(72, 55, 24, 0.16);
+    }
+
+    .summary-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .summary-row dt {
+      font-weight: 700;
+      color: var(--brand-strong);
+    }
+
+    .summary-row dd {
+      margin: 0;
+    }
+
+    footer {
+      padding: 22px 0 0;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100% - 20px, 1120px);
+        margin: 18px auto 36px;
+      }
+
+      .hero,
+      section {
+        padding: 22px;
+        border-radius: 22px;
+      }
+
+      .summary-row {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <p class="eyebrow">WizGrep Guide</p>
+      <h1>WizGrep 説明と操作手順</h1>
+      <p class="lead">添付された「WizGrep説明.xlsx」の内容を、読みやすい 1 ページの HTML ドキュメントに再構成しました。アプリ概要、検索機能、初回設定、Grep 操作、検索結果の扱いまでをまとめています。</p>
+      <nav class="jump-links" aria-label="ページ内リンク">
+        <a href="#overview">はじめに</a>
+        <a href="#features">主な機能</a>
+        <a href="#setup">初回起動時の設定</a>
+        <a href="#grep">Grep 操作</a>
+        <a href="#results">結果への操作</a>
+      </nav>
+    </header>
+
+    <main>
+      <section id="overview">
+        <h2>1. はじめに</h2>
+        <dl class="summary-list">
+          <div class="summary-row">
+            <dt>アプリタイトル</dt>
+            <dd>WizGrep</dd>
+          </div>
+          <div class="summary-row">
+            <dt>アプリ概要</dt>
+            <dd>テキストファイルの他に、Office ソフトウェアや PDF も grep できる Grep ツールです。</dd>
+          </div>
+          <div class="summary-row">
+            <dt>アプリ特徴</dt>
+            <dd>Office ソフトの図形やコメントを含めて Grep できます。</dd>
+          </div>
+        </dl>
+
+        <figure class="screenshot" style="margin-top: 22px;">
+          <img src="assets/image1.png" alt="WizGrep のメイン画面">
+          <figcaption>WizGrep のメイン画面。左ペインにマッチしたファイル、右ペインに検索結果が表示されます。</figcaption>
+        </figure>
+      </section>
+
+      <section id="features">
+        <h2>主な機能</h2>
+
+        <div class="feature-grid">
+          <article class="card">
+            <h3>対応ファイル</h3>
+            <ul>
+              <li>テキストファイル（txt）</li>
+              <li>Excel ファイル（xlsx, xlsm, xls）</li>
+              <li>Word ファイル（docx, docm, doc）</li>
+              <li>PowerPoint ファイル（pptx, pptm, ppt）</li>
+              <li>PDF</li>
+            </ul>
+            <p class="muted">その他の拡張子も、テキストファイルとして grep できます。</p>
+          </article>
+
+          <article class="card">
+            <h3>キーワード</h3>
+            <p>最大 5 キーワードまで設定できます。</p>
+            <p class="muted">AND 検索と OR 検索の両方に対応しています。</p>
+          </article>
+
+          <article class="card">
+            <h3>検索対象の広さ</h3>
+            <p>Office ファイルではセルや本文だけでなく、図形テキストやコメントも検索できます。</p>
+          </article>
+        </div>
+
+        <h3>検索オプション</h3>
+        <div class="info-grid">
+          <article class="panel">
+            <h3>カスタム拡張子</h3>
+            <p>grep する拡張子を指定することで、その拡張子のファイルを検索できます。</p>
+          </article>
+          <article class="panel">
+            <h3>対象外拡張子</h3>
+            <p>grep したくないファイル拡張子を指定できます。</p>
+          </article>
+          <article class="panel">
+            <h3>対象外フォルダー</h3>
+            <p>.git など除外したいフォルダーを指定できます。</p>
+          </article>
+          <article class="panel">
+            <h3>大文字小文字</h3>
+            <p>大文字小文字を区別するかどうかを切り替えられます。</p>
+          </article>
+          <article class="panel">
+            <h3>正規表現</h3>
+            <p>grep キーワードを正規表現として扱うかどうかを選択できます。</p>
+          </article>
+          <article class="panel">
+            <h3>リアルタイム表示</h3>
+            <p>検索中にヒットしたファイルを随時表示できます。OFF の場合は検索完了後にまとめて表示します。</p>
+          </article>
+          <article class="panel">
+            <h3>Excel 改行コード削除</h3>
+            <p>Excel 内の途中改行を除去し、改行をまたぐ文字列でも検索しやすくできます。</p>
+          </article>
+          <article class="panel">
+            <h3>Excel 検索対象</h3>
+            <p>表示値を検索対象にするか、数式を検索対象にするかを切り替えられます。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="setup">
+        <h2>2. 操作方法</h2>
+        <h3>2-1. 初回起動時の設定</h3>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-label">1-1</span>
+            <strong>「WizGrep設定」ボタンをクリックする</strong>
+          </div>
+          <figure class="screenshot">
+            <img src="assets/image2.png" alt="WizGrep 設定ボタンの位置">
+            <span class="marker" style="--x: 86.47%; --y: 5.04%; --w: 12.29%; --h: 6.51%;"></span>
+            <figcaption>メイン画面右上の「WizGrep設定」ボタンから、インデックスや出力設定を開きます。</figcaption>
+          </figure>
+        </article>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-label">1-2</span>
+            <strong>インデックスファイル保存先を設定する</strong>
+          </div>
+          <p>インデックスファイルは Grep 速度向上のためにファイル情報を保持しておくテキストファイルです。</p>
+          <div class="operation-grid">
+            <div class="panel">
+              <h3>インデックス再構築</h3>
+              <ul>
+                <li>ON: インデックスファイルを再出力します。</li>
+                <li>OFF: インデックスファイルを更新せず、そのままファイルを Grep します。</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <h3>出力設定</h3>
+              <ul>
+                <li>ON: ファイル出力時、検索条件を出力ファイルに記載して Grep 結果を出力します。</li>
+                <li>OFF: ファイル出力時、Grep 結果のみを出力します。</li>
+              </ul>
+            </div>
+          </div>
+          <figure class="screenshot">
+            <img src="assets/image3.png" alt="WizGrep 設定ダイアログ">
+            <figcaption>WizGrep 設定ダイアログ。インデックス保存先、再構築設定、出力設定をまとめて管理できます。</figcaption>
+          </figure>
+        </article>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-label">1-3</span>
+            <strong>「保存」ボタンをクリックする</strong>
+          </div>
+          <p>設定内容を保存して、以後の検索や出力に反映します。</p>
+        </article>
+      </section>
+
+      <section id="grep">
+        <h3>2-2. Grep 操作</h3>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-label">2-1</span>
+            <strong>「Grep設定」ボタンをクリックする</strong>
+          </div>
+          <figure class="screenshot">
+            <img src="assets/image4.png" alt="Grep 設定ボタンの位置">
+            <span class="marker" style="--x: 76.52%; --y: 4.25%; --w: 11.45%; --h: 5.19%;"></span>
+            <figcaption>検索条件を設定するため、メイン画面右上の「Grep設定」ボタンを開きます。</figcaption>
+          </figure>
+        </article>
+
+        <article class="step">
+          <div class="step-head">
+            <span class="step-label">2-2</span>
+            <strong>Grep 条件を設定し、Grep する</strong>
+          </div>
+          <p>対象フォルダー、キーワード、検索条件、対象ファイル、カスタム拡張子、対象外フォルダーなどを設定して検索を実行します。</p>
+          <figure class="screenshot">
+            <img src="assets/image5.png" alt="Grep 設定ダイアログ">
+            <figcaption>Grep 設定ダイアログ。対象フォルダー、最大 5 個のキーワード、AND/OR、対象ファイル種別、各種オプションを設定できます。</figcaption>
+          </figure>
+        </article>
+      </section>
+
+      <section id="results">
+        <h2>3. Grep 結果への操作</h2>
+        <p>Grep 完了後は、複数の操作が可能です。</p>
+        <ol style="margin-top: 16px;">
+          <li>マッチしたファイルを出力する。（左ペイン）</li>
+          <li>検索結果を出力する。（右ペイン）</li>
+          <li>左ペインに表示されているファイルをダブルクリックする。ファイルが開かれます。</li>
+          <li>左ペインに表示されているファイルを別のアプリにドラッグ＆ドロップする。</li>
+        </ol>
+      </section>
+
+      <section id="privacy-policy">
+        <h2>4. プライバシーポリシー</h2>
+        <p>最終更新日: 2026年4月18日</p>
+        <p style="margin-top: 16px;">WizGrep は、ユーザーが指定したローカルフォルダー内のファイルを横断検索する Windows デスクトップアプリです。本ポリシーは、WizGrep アプリ本体がどのような情報を取り扱うかを説明するものです。Microsoft Store、Windows、または第三者サービスが提供する機能については、それぞれの提供者のポリシーが適用されます。</p>
+
+        <h3>4-1. 取得・利用する情報</h3>
+        <div class="info-grid">
+          <article class="panel">
+            <h3>検索設定</h3>
+            <p>検索キーワード、対象フォルダー、対象拡張子、除外拡張子、除外フォルダー、正規表現設定、大文字小文字設定、Excel 検索対象設定などを、次回起動時にも利用できるようローカル設定に保存します。</p>
+          </article>
+          <article class="panel">
+            <h3>WizGrep 設定</h3>
+            <p>インデックス保存先、インデックス再構築設定、出力時に検索条件を付与するかどうかの設定をローカルに保存します。</p>
+          </article>
+          <article class="panel">
+            <h3>検索対象ファイルの内容</h3>
+            <p>アプリは、ユーザーが指定したフォルダー内のファイルを読み取り、検索実行とインデックス作成のために内容をローカルで処理します。対応形式には txt、PDF、Excel、Word、PowerPoint 等が含まれます。</p>
+          </article>
+          <article class="panel">
+            <h3>インデックスデータ</h3>
+            <p>インデックス機能を使用する場合、検索対象ファイルのパス、位置情報、抽出テキスト等を含むインデックスファイルとタイムスタンプファイルを、ユーザーが指定した保存先または既定のローカル保存先に作成します。</p>
+          </article>
+          <article class="panel">
+            <h3>エラーログ</h3>
+            <p>アプリは、エラー調査のために一時フォルダーへログファイルを出力することがあります。ログには、例外情報、スタックトレース、ファイルパス等が含まれる場合があります。</p>
+          </article>
+          <article class="panel">
+            <h3>エクスポート内容</h3>
+            <p>ユーザーがエクスポート機能を実行した場合、マッチしたファイル一覧や検索結果が、ユーザーの指定した保存先へテキストファイルとして出力されます。</p>
+          </article>
+        </div>
+
+        <h3>4-2. 情報の保存場所</h3>
+        <ul>
+          <li>設定情報は、Windows のローカルアプリ設定領域に保存されます。</li>
+          <li>インデックスファイルは、ユーザーが設定した保存先フォルダー、または既定では `%LOCALAPPDATA%\WizGrep\Index` 配下に保存されます。</li>
+          <li>ログファイルは、一時フォルダー配下の `WizGrep.log` に保存される場合があります。</li>
+          <li>エクスポートファイルは、ユーザーが選択した保存先に保存されます。</li>
+        </ul>
+
+        <h3>4-3. 外部送信・第三者提供</h3>
+        <p>WizGrep アプリ本体は、検索対象ファイルの内容、検索キーワード、設定情報、ログ情報を、開発者のサーバーや第三者へ自動送信しません。広告 SDK、アプリ内解析、アカウント連携、クラウド同期、独自のテレメトリ送信も実装していません。</p>
+        <p style="margin-top: 16px;">ただし、ユーザーが次の操作を行った場合、その操作に必要な範囲で情報が他のアプリや指定先ファイルへ渡されます。</p>
+        <ul>
+          <li>ファイルをダブルクリックして既定の関連付けアプリで開く場合</li>
+          <li>ファイル一覧を他のアプリへドラッグ＆ドロップする場合</li>
+          <li>検索結果やファイル一覧をテキストファイルとして保存する場合</li>
+        </ul>
+
+        <h3>4-4. 権限と動作範囲</h3>
+        <p>本アプリは Windows デスクトップアプリとして動作し、ユーザーが選択または指定したフォルダー・ファイルに対して検索、インデックス作成、出力を行います。アプリは、検索やファイル起動などのデスクトップ動作のためにフル トラスト実行機能を使用しますが、ユーザーの明示的な操作なく任意の個人情報を外部送信することはありません。</p>
+
+        <h3>4-5. 保持期間と削除方法</h3>
+        <ul>
+          <li>設定情報は、アプリの設定が変更されるまで保持されます。Windows のアプリ リセットやアンインストールにより削除される場合があります。</li>
+          <li>インデックスファイルは、再構築設定で削除・再作成される場合があります。不要な場合は、保存先フォルダーから手動で削除できます。</li>
+          <li>ログファイルは、一時フォルダーから手動で削除できます。</li>
+          <li>エクスポートしたファイルは、保存先フォルダーからユーザー自身で削除してください。</li>
+        </ul>
+
+        <h3>4-6. 個人情報保護に関する補足</h3>
+        <p>WizGrep は、検索対象としてユーザーの文書ファイルを扱う性質上、機密情報や個人情報を含むテキストをローカル環境で処理する可能性があります。そのため、インデックス保存先やエクスポート先には、ユーザー自身の管理下にある保存場所を指定することを推奨します。</p>
+
+        <h3>4-7. 適用範囲</h3>
+        <p>本ポリシーは WizGrep アプリ本体に適用されます。Microsoft Store、Windows OS、既定の関連付けアプリ、またはユーザーが保存先として選択した第三者サービスや外部ストレージの取り扱いについては、それぞれの提供者のポリシーをご確認ください。</p>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

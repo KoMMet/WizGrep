@@ -41,67 +41,64 @@ public class PowerPointFileReader : IFileReader
                 if (slidePart == null) continue;
 
                 var slideName = $"{ResourceLoaderHelper.GetString("SlideLabel")}{slideIndex}";
+                var slide = slidePart.Slide;
 
-                // Extract text from shapes on this slide
-                var shapes = slidePart.Slide?.Descendants<Shape>();
-                var shapeIndex = 1;
-                
-                if(shapes == null) continue;
-
-                foreach (var shape in shapes)
+                if (slide != null)
                 {
-                    var textBody = shape.TextBody;
-                    if (textBody != null)
+                    // Extract text from shapes on this slide
+                    var shapeIndex = 1;
+
+                    foreach (var shape in slide.Descendants<Shape>())
                     {
-                        var lineNumber = 1;
-                        foreach (var paragraph in textBody.Descendants<A.Paragraph>())
+                        var textBody = shape.TextBody;
+                        if (textBody != null)
+                        {
+                            var lineNumber = 1;
+                            foreach (var paragraph in textBody.Descendants<A.Paragraph>())
+                            {
+                                var text = paragraph.InnerText;
+                                if (!string.IsNullOrWhiteSpace(text))
+                                {
+                                    // Use the shape's drawing name if available (e.g., placeholder title)
+                                    var nvSpPr = shape.NonVisualShapeProperties;
+                                    var shapeName = nvSpPr?.NonVisualDrawingProperties?.Name?.Value;
+
+                                    results.Add(new GrepResult
+                                    {
+                                        FilePath = filePath,
+                                        LineNumber = lineNumber,
+                                        SheetName = slideName,
+                                        ObjectName = shapeName ?? $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
+                                        Content = text
+                                    });
+                                    lineNumber++;
+                                }
+                            }
+                        }
+
+                        shapeIndex++;
+                    }
+
+                    // Extract text from graphic frames (tables, charts, SmartArt, etc.)
+                    foreach (var frame in slide.Descendants<GraphicFrame>())
+                    {
+                        var paragraphs = frame.Descendants<A.Paragraph>();
+                        var textIndex = 1;
+                        foreach (var paragraph in paragraphs)
                         {
                             var text = paragraph.InnerText;
                             if (!string.IsNullOrWhiteSpace(text))
                             {
-                                // Use the shape's drawing name if available (e.g., placeholder title)
-                                var nvSpPr = shape.NonVisualShapeProperties;
-                                var shapeName = nvSpPr?.NonVisualDrawingProperties?.Name?.Value;
-
                                 results.Add(new GrepResult
                                 {
                                     FilePath = filePath,
-                                    LineNumber = lineNumber,
+                                    LineNumber = textIndex,
                                     SheetName = slideName,
-                                    ObjectName = shapeName ?? $"{ResourceLoaderHelper.GetString("ShapeLabel")}{shapeIndex}",
+                                    ObjectName = $"{ResourceLoaderHelper.GetString("TableChartLabel")}",
                                     Content = text
                                 });
-                                lineNumber++;
+                                textIndex++;
                             }
-                        }
-                    }
-
-                    shapeIndex++;
-                }
-
-                // Extract text from graphic frames (tables, charts, SmartArt, etc.)
-                var graphicFrames = slidePart.Slide?.Descendants<GraphicFrame>();
-                
-                if(graphicFrames == null) continue;
-                
-                foreach (var frame in graphicFrames)
-                {
-                    var paragraphs = frame.Descendants<A.Paragraph>();
-                    var textIndex = 1;
-                    foreach (var paragraph in paragraphs)
-                    {
-                        var text = paragraph.InnerText;
-                        if (!string.IsNullOrWhiteSpace(text))
-                        {
-                            results.Add(new GrepResult
-                            {
-                                FilePath = filePath,
-                                LineNumber = textIndex,
-                                SheetName = slideName,
-                                ObjectName = $"{ResourceLoaderHelper.GetString("TableChartLabel")}",
-                                Content = text
-                            });
-                            textIndex++;
                         }
                     }
                 }
@@ -135,6 +132,29 @@ public class PowerPointFileReader : IFileReader
                                     noteLineNumber++;
                                 }
                             }
+                        }
+                    }
+                }
+
+                // Extract slide comments (review comments)
+                var commentsPart = slidePart.SlideCommentsPart;
+                if (commentsPart?.CommentList != null)
+                {
+                    var commentIndex = 1;
+                    foreach (var comment in commentsPart.CommentList.Descendants<Comment>())
+                    {
+                        var commentText = comment.InnerText;
+                        if (!string.IsNullOrWhiteSpace(commentText))
+                        {
+                            results.Add(new GrepResult
+                            {
+                                FilePath = filePath,
+                                LineNumber = 0,
+                                SheetName = slideName,
+                                ObjectName = $"{ResourceLoaderHelper.GetString("CommentLabel")}{commentIndex}",
+                                Content = commentText
+                            });
+                            commentIndex++;
                         }
                     }
                 }

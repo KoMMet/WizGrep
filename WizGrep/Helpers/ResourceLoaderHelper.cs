@@ -9,7 +9,7 @@ namespace WizGrep.Helpers
     {
         private static readonly ResourceLoader Loader = new();
 
-        public static string? GetString(string resourceKey)
+        public static string GetString(string resourceKey)
         {
             try
             {
@@ -19,7 +19,7 @@ namespace WizGrep.Helpers
             {
                 LoggerHelper.Instance.LogError($"Error loading resource string for key '{resourceKey}': {e.StackTrace}");
             }
-            return null;
+            return "";
         }
     }
 }
