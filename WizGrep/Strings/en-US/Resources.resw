@@ -189,10 +189,19 @@
   <data name="GrepSettingsDialog.Title" xml:space="preserve">
     <value>GrepSetting</value>
   </data>
-  <data name="PrimaryButtonText.PrimaryButtonText" xml:space="preserve">
-    <value>Setting</value>
+  <data name="GrepSettingsDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Apply</value>
   </data>
-  <data name="CloseButtonText" xml:space="preserve">
+  <data name="GrepSettingsDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="WizGrepSettingsDialog.Title" xml:space="preserve">
+    <value>WizGrepSetting</value>
+  </data>
+  <data name="WizGrepSettingsDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="WizGrepSettingsDialog.CloseButtonText" xml:space="preserve">
     <value>Cancel</value>
   </data>
   <data name="TargetFolderLabel.Text" xml:space="preserve">
