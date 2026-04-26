@@ -192,34 +192,77 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
             }
 
             // Execute search
-            foreach (var content in fileContents)
-                if (MatchesKeywords(content.Content, keywords, grepSettings))
+            var isExcel = IsExcelFile(filePath);
+            var useRowAnd = grepSettings.IsAndSearch && isExcel;
+
+            // Pre-compute the set of entries whose AND evaluation should be performed per-row
+            // (Excel row cells only; shapes/comments are evaluated per entry).
+            HashSet<GrepResult>? rowMatchedEntries = null;
+            if (useRowAnd)
+            {
+                rowMatchedEntries = new HashSet<GrepResult>();
+                var rowGroups = fileContents
+                    .Where(c => c.LineNumber > 0
+                                && !string.IsNullOrEmpty(c.CellAddress)
+                                && string.IsNullOrEmpty(c.ObjectName))
+                    .GroupBy(c => (c.SheetName, c.LineNumber));
+
+                foreach (var rowGroup in rowGroups)
                 {
-                    // If the file is an Excel file, remove line breaks within cells according to the settings
-                    var displayContent = content.Content;
-                    if (grepSettings.RemoveExcelLineBreaks && IsExcelFile(filePath))
-                        displayContent = displayContent.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+                    var rowText = string.Join("\n", rowGroup.Select(c => c.Content));
+                    if (!MatchesKeywords(rowText, keywords, grepSettings)) continue;
 
-                    var result = new GrepResult
-                    {
-                        FilePath = content.FilePath,
-                        LineNumber = content.LineNumber,
-                        SheetName = content.SheetName,
-                        CellAddress = content.CellAddress,
-                        ObjectName = content.ObjectName,
-                        Content = displayContent
-                    };
-                    results.Add(result);
-
-                    if (grepSettings.RealTimeDisplay)
-                        progress?.Report(new GrepProgress
-                        {
-                            CurrentFile = filePath,
-                            ProcessedFiles = processedFiles,
-                            TotalFiles = totalFiles,
-                            FoundResult = result
-                        });
+                    // The row matches AND across all keywords: emit only cells that contain at least one keyword.
+                    foreach (var cell in rowGroup)
+                        if (keywords.Any(k => MatchesKeyword(cell.Content, k, grepSettings)))
+                            rowMatchedEntries.Add(cell);
                 }
+            }
+
+            foreach (var content in fileContents)
+            {
+                bool matched;
+                if (useRowAnd
+                    && content.LineNumber > 0
+                    && !string.IsNullOrEmpty(content.CellAddress)
+                    && string.IsNullOrEmpty(content.ObjectName))
+                {
+                    // Excel row cell: decided by the per-row AND evaluation above.
+                    matched = rowMatchedEntries!.Contains(content);
+                }
+                else
+                {
+                    // Non-Excel, OR search, or Excel shapes/comments: evaluate per entry.
+                    matched = MatchesKeywords(content.Content, keywords, grepSettings);
+                }
+
+                if (!matched) continue;
+
+                // If the file is an Excel file, remove line breaks within cells according to the settings
+                var displayContent = content.Content;
+                if (grepSettings.RemoveExcelLineBreaks && isExcel)
+                    displayContent = displayContent.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+
+                var result = new GrepResult
+                {
+                    FilePath = content.FilePath,
+                    LineNumber = content.LineNumber,
+                    SheetName = content.SheetName,
+                    CellAddress = content.CellAddress,
+                    ObjectName = content.ObjectName,
+                    Content = displayContent
+                };
+                results.Add(result);
+
+                if (grepSettings.RealTimeDisplay)
+                    progress?.Report(new GrepProgress
+                    {
+                        CurrentFile = filePath,
+                        ProcessedFiles = processedFiles,
+                        TotalFiles = totalFiles,
+                        FoundResult = result
+                    });
+            }
 
             processedFiles++;
         }

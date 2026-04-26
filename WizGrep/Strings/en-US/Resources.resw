@@ -141,6 +141,9 @@
   <data name="ResultColumnContent.Text" xml:space="preserve">
     <value>Contents</value>
   </data>
+  <data name="HowToUseButton.Content" xml:space="preserve">
+    <value>How to use</value>
+  </data>
   <data name="GrepSettingsButton.Content" xml:space="preserve">
     <value>GrepSetting</value>
   </data>

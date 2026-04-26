@@ -52,6 +52,11 @@ public sealed partial class MainWindow : Window
 
     public MainViewModel ViewModel { get; }
 
+    private async void OnHowToUseClick(object sender, RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("https://kommet.github.io/WizGrep/"));
+    }
+
     private async void OnGrepSettingsClick(object sender, RoutedEventArgs e)
     {
         await ShowGrepSettingsDialogAsync();
