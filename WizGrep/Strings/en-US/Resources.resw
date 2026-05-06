@@ -369,6 +369,18 @@
   <data name="ShowSearchConditionsInExportCheckBox.Content" xml:space="preserve">
     <value>Show search conditions in export</value>
   </data>
+  <data name="ThemeLabel.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="SystemThemeRadioButton.Content" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="LightThemeRadioButton.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="DarkThemeRadioButton.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
   <data name="ExportHeader_TargetFolder" xml:space="preserve">
     <value>Target Folder</value>
   </data>
@@ -419,5 +431,29 @@
   </data>
   <data name="HeaderFooterLabel" xml:space="preserve">
     <value>Header/Footer</value>
+  </data>
+  <data name="DocumentPropertiesLabel" xml:space="preserve">
+    <value>Document Properties</value>
+  </data>
+  <data name="HyperlinkLabel" xml:space="preserve">
+    <value>Hyperlink</value>
+  </data>
+  <data name="AltTextLabel" xml:space="preserve">
+    <value>Alt Text</value>
+  </data>
+  <data name="SmartArtLabel" xml:space="preserve">
+    <value>SmartArt</value>
+  </data>
+  <data name="SlideMasterLabel" xml:space="preserve">
+    <value>Slide Master</value>
+  </data>
+  <data name="SlideLayoutLabel" xml:space="preserve">
+    <value>Slide Layout</value>
+  </data>
+  <data name="BookmarkLabel" xml:space="preserve">
+    <value>Bookmark</value>
+  </data>
+  <data name="FormFieldLabel" xml:space="preserve">
+    <value>Form Field</value>
   </data>
 </root>

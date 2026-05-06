@@ -30,9 +30,17 @@ public class PowerPointFileReader : IFileReader
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var document = PresentationDocument.Open(stream, false);
+            OpenXmlSearchHelper.AddPackageProperties(document, filePath, results);
+            OpenXmlSearchHelper.AddHyperlinks(document, filePath, results);
+            OpenXmlSearchHelper.AddAlternativeText(document, filePath, results);
+            OpenXmlSearchHelper.AddChartText(document, filePath, results);
+            OpenXmlSearchHelper.AddSmartArtText(document, filePath, results);
+
             var presentationPart = document.PresentationPart;
 
             if (presentationPart?.Presentation?.SlideIdList == null) return results;
+
+            ExtractPresentationSharedText(presentationPart, filePath, results);
 
             var slideIndex = 1;
             foreach (var slideId in presentationPart.Presentation.SlideIdList.Descendants<SlideId>())
@@ -168,5 +176,24 @@ public class PowerPointFileReader : IFileReader
         }
 
         return results;
+    }
+
+    private static void ExtractPresentationSharedText(PresentationPart presentationPart, string filePath, IList<GrepResult> results)
+    {
+        var layoutIndex = 1;
+        foreach (var slideMasterPart in presentationPart.SlideMasterParts)
+        {
+            var masterName = $"{ResourceLoaderHelper.GetString("SlideMasterLabel")}{layoutIndex++}";
+            OpenXmlSearchHelper.AddDrawingParagraphText(slideMasterPart, filePath, masterName,
+                ResourceLoaderHelper.GetString("ShapeLabel"), results);
+
+            var slideLayoutIndex = 1;
+            foreach (var slideLayoutPart in slideMasterPart.SlideLayoutParts)
+            {
+                var layoutName = $"{ResourceLoaderHelper.GetString("SlideLayoutLabel")}{slideLayoutIndex++}";
+                OpenXmlSearchHelper.AddDrawingParagraphText(slideLayoutPart, filePath, layoutName,
+                    ResourceLoaderHelper.GetString("ShapeLabel"), results);
+            }
+        }
     }
 }

@@ -32,6 +32,10 @@ public class WordFileReader : IFileReader
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var document = WordprocessingDocument.Open(stream, false);
+            OpenXmlSearchHelper.AddPackageProperties(document, filePath, results);
+            OpenXmlSearchHelper.AddHyperlinks(document, filePath, results);
+            OpenXmlSearchHelper.AddAlternativeText(document, filePath, results);
+
             var body = document.MainDocumentPart?.Document?.Body;
 
             if (body != null)
@@ -76,6 +80,18 @@ public class WordFileReader : IFileReader
                         });
                     shapeIndex++;
                 }
+            }
+
+            if (document.MainDocumentPart != null)
+            {
+                var shapeName = ResourceLoaderHelper.GetString("ShapeLabel");
+                OpenXmlSearchHelper.AddWordDrawingTextBoxes(document.MainDocumentPart, filePath, shapeName, results);
+
+                foreach (var headerPart in document.MainDocumentPart.HeaderParts)
+                    OpenXmlSearchHelper.AddWordDrawingTextBoxes(headerPart, filePath, shapeName, results);
+
+                foreach (var footerPart in document.MainDocumentPart.FooterParts)
+                    OpenXmlSearchHelper.AddWordDrawingTextBoxes(footerPart, filePath, shapeName, results);
             }
 
             // Extract text from headers and footers

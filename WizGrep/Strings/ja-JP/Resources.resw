@@ -369,6 +369,18 @@
   <data name="ShowSearchConditionsInExportCheckBox.Content" xml:space="preserve">
     <value>出力ファイルに検索条件を表示</value>
   </data>
+  <data name="ThemeLabel.Text" xml:space="preserve">
+    <value>テーマ</value>
+  </data>
+  <data name="SystemThemeRadioButton.Content" xml:space="preserve">
+    <value>システム</value>
+  </data>
+  <data name="LightThemeRadioButton.Content" xml:space="preserve">
+    <value>ライト</value>
+  </data>
+  <data name="DarkThemeRadioButton.Content" xml:space="preserve">
+    <value>ダーク</value>
+  </data>
   <data name="ExportHeader_TargetFolder" xml:space="preserve">
     <value>対象フォルダー</value>
   </data>
@@ -419,5 +431,29 @@
   </data>
   <data name="HeaderFooterLabel" xml:space="preserve">
     <value>ヘッダー/フッター</value>
+  </data>
+  <data name="DocumentPropertiesLabel" xml:space="preserve">
+    <value>文書プロパティ</value>
+  </data>
+  <data name="HyperlinkLabel" xml:space="preserve">
+    <value>ハイパーリンク</value>
+  </data>
+  <data name="AltTextLabel" xml:space="preserve">
+    <value>代替テキスト</value>
+  </data>
+  <data name="SmartArtLabel" xml:space="preserve">
+    <value>SmartArt</value>
+  </data>
+  <data name="SlideMasterLabel" xml:space="preserve">
+    <value>スライドマスター</value>
+  </data>
+  <data name="SlideLayoutLabel" xml:space="preserve">
+    <value>スライドレイアウト</value>
+  </data>
+  <data name="BookmarkLabel" xml:space="preserve">
+    <value>しおり</value>
+  </data>
+  <data name="FormFieldLabel" xml:space="preserve">
+    <value>フォーム</value>
   </data>
 </root>

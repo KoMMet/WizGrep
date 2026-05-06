@@ -44,6 +44,7 @@ public sealed partial class WizGrepSettingsDialog : ContentDialog
         ViewModel.BrowseFolderAsync = PickFolderAsync;
 
         InitializeComponent();
+        ApplyThemeModeSelection();
     }
 
     public WizGrepSettingsDialogViewModel ViewModel { get; }
@@ -87,6 +88,21 @@ public sealed partial class WizGrepSettingsDialog : ContentDialog
     private void OnPrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
     {
         ViewModel.SaveToSettings(_settings);
+    }
+
+    private void ApplyThemeModeSelection()
+    {
+        SystemThemeRadioButton.IsChecked = ViewModel.ThemeMode == ThemeMode.System;
+        LightThemeRadioButton.IsChecked = ViewModel.ThemeMode == ThemeMode.Light;
+        DarkThemeRadioButton.IsChecked = ViewModel.ThemeMode == ThemeMode.Dark;
+    }
+
+    private void OnThemeRadioButtonChecked(object sender, RoutedEventArgs e)
+    {
+        if (sender is RadioButton { Tag: string tag } && Enum.TryParse<ThemeMode>(tag, out var themeMode))
+        {
+            ViewModel.ThemeMode = themeMode;
+        }
     }
 
     private void OnOssLibClick(object sender, RoutedEventArgs e)
