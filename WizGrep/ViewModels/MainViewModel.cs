@@ -353,7 +353,7 @@ public partial class MainViewModel : ObservableObject
         lines.Add($"{ResourceLoaderHelper.GetString("FilePathLabel")}\t{ResourceLoaderHelper.GetString("FileNameLabel")}\t{ResourceLoaderHelper.GetString("LocationLabel")}\t{ResourceLoaderHelper.GetString("ContentLabel")}");
         foreach (var result in GrepResults)
         {
-            lines.Add($"{result.FilePath}\t{result.FileName}\t{EscapeForTsv(result.Location)}\t{EscapeForTsv(result.Content)}");
+            lines.Add($"{result.FilePath}\t{result.FileName}\t{EscapeForTsv(result.Location)}\t{EscapeForContentTsv(result.Content)}");
         }
         return string.Join(Environment.NewLine, lines);
     }
@@ -459,5 +459,20 @@ public partial class MainViewModel : ObservableObject
             .Replace("\r", " ")
             .Replace("\n", " ")
             .Replace("\t", " ");
+    }
+
+    /// <summary>
+    /// 「内容」列専用の TSV エスケープ。改行のみ半角スペース化し、タブ文字は保持する。
+    /// Excel 行表示モードではセル間がタブで区切られているため、ここでタブを潰すと
+    /// 出力ファイルを Excel で開いた際に列展開されなくなる。
+    /// </summary>
+    /// <param name="value">エスケープ対象の文字列。</param>
+    /// <returns>改行のみ空白化し、タブを保持した文字列。</returns>
+    private static string EscapeForContentTsv(string value)
+    {
+        return value
+            .Replace("\r\n", " ")
+            .Replace("\r", " ")
+            .Replace("\n", " ");
     }
 }

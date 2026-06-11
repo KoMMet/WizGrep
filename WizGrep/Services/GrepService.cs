@@ -219,6 +219,42 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
                 }
             }
 
+            // Excel の通常セル(行内のセル)について、行ごとに「全セル値をタブ連結した文字列」を事前構築する。
+            // 位置列(CellAddress)はヒットセル番地のまま残し、内容列だけを行全体に差し替える用途。
+            // 行表示モードでは「1セル=1行」が前提のため、セル内改行を残すとTextBlockが折り返して
+            // 列レイアウトが崩れる。RemoveExcelLineBreaks 設定に関係なく、セル内改行は常に単一行へ正規化する。
+            //   - RemoveExcelLineBreaks=true  : 半角スペース(従来通り)
+            //   - RemoveExcelLineBreaks=false : "↵"(U+21B5) ※改行があった事実を視覚的に残す
+            Dictionary<(string sheet, int line), string>? rowContentByKey = null;
+            if (isExcel)
+            {
+                rowContentByKey = fileContents
+                    .Where(c => c.LineNumber > 0
+                                && !string.IsNullOrEmpty(c.CellAddress)
+                                && string.IsNullOrEmpty(c.ObjectName))
+                    .GroupBy(c => (c.SheetName ?? string.Empty, c.LineNumber))
+                    .ToDictionary(
+                        g => g.Key,
+                        g =>
+                        {
+                            var cellValues = g
+                                .OrderBy(c => CellRefToColumnIndex(c.CellAddress!))
+                                .Select(c =>
+                                {
+                                    var v = c.Content;
+                                    // 行表示モードではセル内改行は常に正規化する(レイアウト維持のため必須)
+                                    if (grepSettings.RemoveExcelLineBreaks)
+                                        v = v.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+                                    else
+                                        v = v.Replace("\r\n", "↵").Replace("\n", "↵").Replace("\r", "↵");
+                                    // セル内タブはタブ区切り構造を壊さないように半角スペース化
+                                    v = v.Replace("\t", " ");
+                                    return v;
+                                });
+                            return string.Join("\t", cellValues);
+                        });
+            }
+
             foreach (var content in fileContents)
             {
                 bool matched;
@@ -242,6 +278,22 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
                 var displayContent = content.Content;
                 if (grepSettings.RemoveExcelLineBreaks && isExcel)
                     displayContent = displayContent.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+
+                // Excel の通常セルは、内容列を「行全体のタブ区切り文字列」に差し替える。
+                // (図形/コメント/ヘッダ/フッタ等は ObjectName が非NULL のためここでは差し替えない。)
+                var isExcelRowCell = isExcel
+                                     && content.LineNumber > 0
+                                     && !string.IsNullOrEmpty(content.CellAddress)
+                                     && string.IsNullOrEmpty(content.ObjectName);
+
+                if (isExcelRowCell
+                    && rowContentByKey is not null
+                    && rowContentByKey.TryGetValue(
+                        (content.SheetName ?? string.Empty, content.LineNumber),
+                        out var rowJoined))
+                {
+                    displayContent = rowJoined;
+                }
 
                 var result = new GrepResult
                 {
@@ -268,6 +320,24 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
         }
 
         return results;
+    }
+
+    /// <summary>
+    /// Excel セル参照(例: "A1", "AB12")の列部分を 1 始まりの列番号に変換する。
+    /// "A" -> 1, "Z" -> 26, "AA" -> 27。行内セルを左から順に並べるために使用。
+    /// </summary>
+    /// <param name="cellRef">セル参照文字列。</param>
+    /// <returns>1 始まりの列番号。アルファベット以外が現れた時点で打ち切る。</returns>
+    private static int CellRefToColumnIndex(string cellRef)
+    {
+        var col = 0;
+        foreach (var ch in cellRef)
+        {
+            if (ch >= 'A' && ch <= 'Z') col = col * 26 + (ch - 'A' + 1);
+            else if (ch >= 'a' && ch <= 'z') col = col * 26 + (ch - 'a' + 1);
+            else break;
+        }
+        return col;
     }
 
     /// <summary>
