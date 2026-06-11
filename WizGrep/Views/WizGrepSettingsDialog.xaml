@@ -3,9 +3,7 @@
     x:Class="WizGrep.Views.WizGrepSettingsDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="WizGrep設定"
-    PrimaryButtonText="保存"
-    CloseButtonText="キャンセル"
+    x:Uid="WizGrepSettingsDialog"
     DefaultButton="Primary"
     PrimaryButtonClick="OnPrimaryButtonClick">
     <Grid MinWidth="450">
@@ -32,6 +30,14 @@
             <StackPanel Spacing="4">
                 <TextBlock x:Uid="ExportSettingsLabel" FontWeight="SemiBold" />
                 <CheckBox x:Uid="ShowSearchConditionsInExportCheckBox" IsChecked="{x:Bind ViewModel.ShowSearchConditionsInExport, Mode=TwoWay}" />
+            </StackPanel>
+            <StackPanel Spacing="4">
+                <TextBlock x:Uid="ThemeLabel" FontWeight="SemiBold" />
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <RadioButton x:Name="SystemThemeRadioButton" x:Uid="SystemThemeRadioButton" GroupName="ThemeMode" Tag="System" Checked="OnThemeRadioButtonChecked" />
+                    <RadioButton x:Name="LightThemeRadioButton" x:Uid="LightThemeRadioButton" GroupName="ThemeMode" Tag="Light" Checked="OnThemeRadioButtonChecked" />
+                    <RadioButton x:Name="DarkThemeRadioButton" x:Uid="DarkThemeRadioButton" GroupName="ThemeMode" Tag="Dark" Checked="OnThemeRadioButtonChecked" />
+                </StackPanel>
             </StackPanel>
             <Button x:Uid="OssLibraryButton" Content="OSS Library" Click="OnOssLibClick" HorizontalAlignment="Left" />
         </StackPanel>

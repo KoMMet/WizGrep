@@ -27,6 +27,7 @@ public partial class App : Application
     {
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         InitializeComponent();
+
     }
 
     /// <summary>

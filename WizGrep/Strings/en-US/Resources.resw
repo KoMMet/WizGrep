@@ -141,6 +141,9 @@
   <data name="ResultColumnContent.Text" xml:space="preserve">
     <value>Contents</value>
   </data>
+  <data name="HowToUseButton.Content" xml:space="preserve">
+    <value>How to use</value>
+  </data>
   <data name="GrepSettingsButton.Content" xml:space="preserve">
     <value>GrepSetting</value>
   </data>
@@ -189,10 +192,19 @@
   <data name="GrepSettingsDialog.Title" xml:space="preserve">
     <value>GrepSetting</value>
   </data>
-  <data name="PrimaryButtonText.PrimaryButtonText" xml:space="preserve">
-    <value>Setting</value>
+  <data name="GrepSettingsDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Apply</value>
   </data>
-  <data name="CloseButtonText" xml:space="preserve">
+  <data name="GrepSettingsDialog.CloseButtonText" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="WizGrepSettingsDialog.Title" xml:space="preserve">
+    <value>WizGrepSetting</value>
+  </data>
+  <data name="WizGrepSettingsDialog.PrimaryButtonText" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="WizGrepSettingsDialog.CloseButtonText" xml:space="preserve">
     <value>Cancel</value>
   </data>
   <data name="TargetFolderLabel.Text" xml:space="preserve">
@@ -357,6 +369,18 @@
   <data name="ShowSearchConditionsInExportCheckBox.Content" xml:space="preserve">
     <value>Show search conditions in export</value>
   </data>
+  <data name="ThemeLabel.Text" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="SystemThemeRadioButton.Content" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="LightThemeRadioButton.Content" xml:space="preserve">
+    <value>Light</value>
+  </data>
+  <data name="DarkThemeRadioButton.Content" xml:space="preserve">
+    <value>Dark</value>
+  </data>
   <data name="ExportHeader_TargetFolder" xml:space="preserve">
     <value>Target Folder</value>
   </data>
@@ -407,5 +431,29 @@
   </data>
   <data name="HeaderFooterLabel" xml:space="preserve">
     <value>Header/Footer</value>
+  </data>
+  <data name="DocumentPropertiesLabel" xml:space="preserve">
+    <value>Document Properties</value>
+  </data>
+  <data name="HyperlinkLabel" xml:space="preserve">
+    <value>Hyperlink</value>
+  </data>
+  <data name="AltTextLabel" xml:space="preserve">
+    <value>Alt Text</value>
+  </data>
+  <data name="SmartArtLabel" xml:space="preserve">
+    <value>SmartArt</value>
+  </data>
+  <data name="SlideMasterLabel" xml:space="preserve">
+    <value>Slide Master</value>
+  </data>
+  <data name="SlideLayoutLabel" xml:space="preserve">
+    <value>Slide Layout</value>
+  </data>
+  <data name="BookmarkLabel" xml:space="preserve">
+    <value>Bookmark</value>
+  </data>
+  <data name="FormFieldLabel" xml:space="preserve">
+    <value>Form Field</value>
   </data>
 </root>

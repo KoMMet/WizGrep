@@ -28,6 +28,13 @@ public class ExcelFileReader : IFileReader
         {
             using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using var document = SpreadsheetDocument.Open(stream, false);
+            OpenXmlSearchHelper.AddPackageProperties(document, filePath, results);
+            OpenXmlSearchHelper.AddHyperlinks(document, filePath, results);
+            OpenXmlSearchHelper.AddAlternativeText(document, filePath, results);
+            OpenXmlSearchHelper.AddChartText(document, filePath, results);
+            OpenXmlSearchHelper.AddSmartArtText(document, filePath, results);
+            OpenXmlSearchHelper.AddThreadedComments(document, filePath, results);
+
             var workbookPart = document.WorkbookPart;
 
             if (workbookPart == null) return results;
@@ -44,6 +51,8 @@ public class ExcelFileReader : IFileReader
                 var worksheetPart = (WorksheetPart?)workbookPart.GetPartById(sheet.Id!);
 
                 if (worksheetPart == null) continue;
+
+                OpenXmlSearchHelper.AddHeaderFooterText(worksheetPart, filePath, sheetName, results);
 
                 // Extract cell values from every row/cell in the sheet
                 var sheetData = worksheetPart.Worksheet?.Descendants<SheetData>().FirstOrDefault();

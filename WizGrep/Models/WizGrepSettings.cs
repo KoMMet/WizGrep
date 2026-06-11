@@ -1,5 +1,12 @@
 namespace WizGrep.Models;
 
+public enum ThemeMode
+{
+    System,
+    Light,
+    Dark
+}
+
 /// <summary>
 /// Persistent settings for the WizGrep indexing feature.
 /// Serialized to / deserialized from local application storage by <see cref="Services.SettingsService"/>.
@@ -24,4 +31,6 @@ public class WizGrepSettings
     /// (both file list and grep results exports).
     /// </summary>
     public bool ShowSearchConditionsInExport { get; set; } = false;
+
+    public ThemeMode ThemeMode { get; set; } = ThemeMode.System;
 }

@@ -10,6 +10,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Microsoft.Windows.Storage.Pickers;
 using WizGrep.Helpers;
+using WizGrep.Models;
 using WizGrep.Services;
 using WizGrep.ViewModels;
 using WizGrep.Views;
@@ -40,6 +41,7 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
 
         _columnWidthsHelper = (ResultColumnWidthsHelper)RootGrid.Resources["ResultColumnWidthsHelper"];
+        ApplyTheme(ViewModel.WizGrepSettings.ThemeMode);
     }
 
     private readonly ResultColumnWidthsHelper _columnWidthsHelper;
@@ -51,6 +53,11 @@ public sealed partial class MainWindow : Window
     private double _paneSplitterDragStartWidth;
 
     public MainViewModel ViewModel { get; }
+
+    private async void OnHowToUseClick(object sender, RoutedEventArgs e)
+    {
+        await Windows.System.Launcher.LaunchUriAsync(new Uri("https://kommet.github.io/WizGrep/"));
+    }
 
     private async void OnGrepSettingsClick(object sender, RoutedEventArgs e)
     {
@@ -68,7 +75,8 @@ public sealed partial class MainWindow : Window
         {
             var dialog = new GrepSettingsDialog(this, ViewModel.GrepSettings)
             {
-                XamlRoot = Content.XamlRoot
+                XamlRoot = Content.XamlRoot,
+                RequestedTheme = RootGrid.RequestedTheme
             };
 
             var result = await dialog.ShowAsync();
@@ -92,7 +100,8 @@ public sealed partial class MainWindow : Window
         {
             var dialog = new WizGrepSettingsDialog(this, ViewModel.WizGrepSettings)
             {
-                XamlRoot = Content.XamlRoot
+                XamlRoot = Content.XamlRoot,
+                RequestedTheme = RootGrid.RequestedTheme
             };
 
             var result = await dialog.ShowAsync();
@@ -100,6 +109,7 @@ public sealed partial class MainWindow : Window
             if (result == ContentDialogResult.Primary)
             {
                 ViewModel.SaveWizGrepSettings(dialog.Settings);
+                ApplyTheme(ViewModel.WizGrepSettings.ThemeMode);
             }
         }
         catch (Exception ex)
@@ -107,6 +117,16 @@ public sealed partial class MainWindow : Window
             LoggerHelper.Instance.LogError($"Error showing WizGrep Settings dialog: {ex}");
             await ShowErrorDialogAsync($"{ResourceLoaderHelper.GetString("ErrorMessage_WizGrepSetting")}", ex.Message);
         }
+    }
+
+    private void ApplyTheme(ThemeMode themeMode)
+    {
+        RootGrid.RequestedTheme = themeMode switch
+        {
+            ThemeMode.Light => ElementTheme.Light,
+            ThemeMode.Dark => ElementTheme.Dark,
+            _ => ElementTheme.Default
+        };
     }
 
     private async Task ExportToFileAsync(string content, string suggestedFileName)

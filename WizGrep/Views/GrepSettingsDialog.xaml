@@ -4,9 +4,6 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Uid="GrepSettingsDialog"
-    Title="Grep設定"
-    PrimaryButtonText="設定"
-    CloseButtonText="キャンセル"
     DefaultButton="Primary"
     IsPrimaryButtonEnabled="{x:Bind ViewModel.HasAnyTargetFileSelected, Mode=OneWay}"
     PrimaryButtonClick="OnPrimaryButtonClick">
