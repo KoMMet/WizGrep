@@ -39,6 +39,7 @@ public sealed partial class MainWindow : Window
         ViewModel.ExportToFileAsync = ExportToFileAsync;
 
         InitializeComponent();
+        RootGrid.DataContext = ViewModel;
 
         _columnWidthsHelper = (ResultColumnWidthsHelper)RootGrid.Resources["ResultColumnWidthsHelper"];
         ApplyTheme(ViewModel.WizGrepSettings.ThemeMode);
@@ -135,21 +136,23 @@ public sealed partial class MainWindow : Window
         {
             var picker = new FileSavePicker(AppWindow.Id)
             {
-                SuggestedStartLocation = PickerLocationId.Desktop
+                SuggestedStartLocation = PickerLocationId.Desktop,
+                SuggestedFileName = suggestedFileName
             };
             picker.FileTypeChoices.Add($"{ResourceLoaderHelper.GetString("TextFileLabel")}", new List<string> { ".txt" });
-            
+
             var pickResult = await picker.PickSaveFileAsync();
-                if (pickResult != null && !string.IsNullOrEmpty(pickResult.Path))
-                {
-                    var file = await StorageFile.GetFileFromPathAsync(pickResult.Path);
-                    await FileIO.WriteTextAsync(file, content);
-                }
+            if (pickResult is null || string.IsNullOrWhiteSpace(pickResult.Path))
+            {
+                return;
+            }
+
+            await File.WriteAllTextAsync(pickResult.Path, content);
         }
         catch (Exception ex)
         {
-            LoggerHelper.Instance.LogError($"Error exporting to file: {ex.StackTrace}");
-            await ShowErrorDialogAsync($"{ResourceLoaderHelper.GetString("ErrorMessage_ExportFile")}", ex.StackTrace);
+            LoggerHelper.Instance.LogError($"Error exporting to file: {ex}");
+            await ShowErrorDialogAsync($"{ResourceLoaderHelper.GetString("ErrorMessage_ExportFile")}", ex.Message);
         }
     }
 
