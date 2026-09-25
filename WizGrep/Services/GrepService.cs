@@ -195,12 +195,12 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
             var isExcel = IsExcelFile(filePath);
             var useRowAnd = grepSettings.IsAndSearch && isExcel;
 
-            // Pre-compute the set of entries whose AND evaluation should be performed per-row
-            // (Excel row cells only; shapes/comments are evaluated per entry).
-            HashSet<GrepResult>? rowMatchedEntries = null;
+            // Pre-compute the set of Excel rows whose AND evaluation succeeds.
+            // Row identity is based on sheet name + line number.
+            HashSet<(string sheet, int line)>? matchedExcelRows = null;
             if (useRowAnd)
             {
-                rowMatchedEntries = new HashSet<GrepResult>();
+                matchedExcelRows = new HashSet<(string sheet, int line)>();
                 var rowGroups = fileContents
                     .Where(c => c.LineNumber > 0
                                 && !string.IsNullOrEmpty(c.CellAddress)
@@ -212,15 +212,12 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
                     var rowText = string.Join("\n", rowGroup.Select(c => c.Content));
                     if (!MatchesKeywords(rowText, keywords, grepSettings)) continue;
 
-                    // The row matches AND across all keywords: emit only cells that contain at least one keyword.
-                    foreach (var cell in rowGroup)
-                        if (keywords.Any(k => MatchesKeyword(cell.Content, k, grepSettings)))
-                            rowMatchedEntries.Add(cell);
+                    matchedExcelRows.Add((rowGroup.Key.SheetName ?? string.Empty, rowGroup.Key.LineNumber));
                 }
             }
 
             // Excel の通常セル(行内のセル)について、行ごとに「全セル値をタブ連結した文字列」を事前構築する。
-            // 位置列(CellAddress)はヒットセル番地のまま残し、内容列だけを行全体に差し替える用途。
+            // 位置列(CellAddress)は代表セル番地のまま残し、内容列だけを行全体に差し替える。
             // 行表示モードでは「1セル=1行」が前提のため、セル内改行を残すとTextBlockが折り返して
             // 列レイアウトが崩れる。RemoveExcelLineBreaks 設定に関係なく、セル内改行は常に単一行へ正規化する。
             //   - RemoveExcelLineBreaks=true  : 半角スペース(従来通り)
@@ -255,6 +252,7 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
                         });
             }
 
+            var emittedExcelRows = isExcel ? new HashSet<(string sheet, int line)>() : null;
             foreach (var content in fileContents)
             {
                 bool matched;
@@ -264,7 +262,7 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
                     && string.IsNullOrEmpty(content.ObjectName))
                 {
                     // Excel row cell: decided by the per-row AND evaluation above.
-                    matched = rowMatchedEntries!.Contains(content);
+                    matched = matchedExcelRows!.Contains((content.SheetName ?? string.Empty, content.LineNumber));
                 }
                 else
                 {
@@ -279,20 +277,24 @@ public class GrepService(FileReaderService fileReaderService, IndexService index
                 if (grepSettings.RemoveExcelLineBreaks && isExcel)
                     displayContent = displayContent.Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
 
-                // Excel の通常セルは、内容列を「行全体のタブ区切り文字列」に差し替える。
+                // Excel の通常セルは、内容列を「行全体のタブ区切り文字列」に差し替え、1行につき1件だけ表示する。
                 // (図形/コメント/ヘッダ/フッタ等は ObjectName が非NULL のためここでは差し替えない。)
                 var isExcelRowCell = isExcel
                                      && content.LineNumber > 0
                                      && !string.IsNullOrEmpty(content.CellAddress)
                                      && string.IsNullOrEmpty(content.ObjectName);
 
-                if (isExcelRowCell
-                    && rowContentByKey is not null
-                    && rowContentByKey.TryGetValue(
-                        (content.SheetName ?? string.Empty, content.LineNumber),
-                        out var rowJoined))
+                if (isExcelRowCell)
                 {
-                    displayContent = rowJoined;
+                    var rowKey = (content.SheetName ?? string.Empty, content.LineNumber);
+                    if (emittedExcelRows is not null && !emittedExcelRows.Add(rowKey))
+                        continue;
+
+                    if (rowContentByKey is not null
+                        && rowContentByKey.TryGetValue(rowKey, out var rowJoined))
+                    {
+                        displayContent = rowJoined;
+                    }
                 }
 
                 var result = new GrepResult
